@@ -5,7 +5,7 @@ const GetDataFromAPI = () => {
     const [data, setData] = React.useState(null)
 
     React.useEffect(() => {
-        fetch('/api')
+        fetch('/send')
             .then(response => response.json())
             .then(message => {
                 setData(message)
@@ -13,6 +13,19 @@ const GetDataFromAPI = () => {
     }, [])
 
     return data
+}
+
+const PostDataToAPI = () => {
+    const message = {'message': 'Sent from React frontend :)'}
+
+    fetch('/receive', {
+        method: 'POST',
+        cache: 'no-cache',
+        headers: {
+            'content_type':'application/json'
+        },
+        body: JSON.stringify(message)
+    })
 }
 
 const Square = (props) => {
@@ -42,6 +55,7 @@ const Square = (props) => {
 const App = () => {
     const Data = GetDataFromAPI()
     if (Data === null) { return null}
+    PostDataToAPI()
 
     const rows = Data.rows  // m wierszy
     const columns = Data.columns // n kolumn
@@ -51,9 +65,6 @@ const App = () => {
     const squareWidth = areaWidth/rows // szerokość kwadratu w px
 
     const noSquares = rows*columns
-    console.log(rows, columns)
-    console.log(areaHeight, areaWidth)
-    console.log(squareHeight, squareWidth)
 
     return (
         <div>

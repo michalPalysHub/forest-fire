@@ -1,13 +1,27 @@
-from flask import Flask
+from flask import Flask, request
 
 app = Flask(__name__)
 
-@app.route('/api', methods=['GET'])
-def api():
+COLUMNS = 20
+ROWS = 20
+AREA_WIDTH = 600
+AREA_HEIGHT = 600
+
+
+@app.route('/send', methods=['GET'])
+def send():
     return {
         'message': 'Sent from Flask backend :)',
-        'columns': 20,
-        'rows': 20,
-        'area_width': 600,
-        'area_height': 600,
+        'columns': COLUMNS,
+        'rows': ROWS,
+        'area_width': AREA_WIDTH,
+        'area_height': AREA_HEIGHT,
     }
+
+
+@app.route('/receive', methods=['POST'])
+def receive():
+    message = request.json
+    print(message)
+
+    return message
