@@ -1,13 +1,6 @@
 import React from 'react';
 
 
-const M = 10 // m wierszy
-const N = 10 // n kolumn
-const AREA_HEIGHT = 800 // wysokosc calej planszy
-const AREA_WIDTH = 800  // szerokosc calej planszy
-const SQUARE_HEIGHT = AREA_HEIGHT/N // wysokość kwadratu w px
-const SQUARE_WIDTH = AREA_WIDTH/M // szerokość kwadratu w px
-
 const GetDataFromAPI = () => {
     const [data, setData] = React.useState(null)
 
@@ -22,14 +15,16 @@ const GetDataFromAPI = () => {
     return data
 }
 
-const Square = () => {
+const Square = (props) => {
     const [color, setColor] = React.useState('lightgreen');
+
     const squareStyle = {
         outline: 'none',
-        height: `${SQUARE_HEIGHT}px`,
-        width: `${SQUARE_WIDTH}px`,
+        height: `${props.width}px`,
+        width: `${props.height}px`,
         float: 'left', // kolejne kwadraty nie rozszerzają kontenera, ustawiają się poniżej
-        borderRadius: '5px',
+        borderRadius: '2px',
+        borderWidth: '1px',
         background: `${color}`, // handleClick zmienia stan z useState i tym samnym kolor tutaj
     };
 
@@ -46,9 +41,19 @@ const Square = () => {
 
 const App = () => {
     const Data = GetDataFromAPI()
-    console.log(Data)
+    if (Data === null) { return null}
 
-    const noSquares = M*N
+    const rows = Data.rows  // m wierszy
+    const columns = Data.columns // n kolumn
+    const areaHeight = Data.area_height // wysokosc calej planszy
+    const areaWidth = Data.area_width // szerokosc calej planszy
+    const squareHeight = areaHeight/columns // wysokość kwadratu w px
+    const squareWidth = areaWidth/rows // szerokość kwadratu w px
+
+    const noSquares = rows*columns
+    console.log(rows, columns)
+    console.log(areaHeight, areaWidth)
+    console.log(squareHeight, squareWidth)
 
     return (
         <div>
@@ -60,9 +65,9 @@ const App = () => {
                 }}>
                 <div
                     style={{
-                        display: 'table',
-                        height: `${N * SQUARE_HEIGHT}px`, // n wierszy
-                        width: `${M * SQUARE_WIDTH}px`, // m kolumn
+                        display: 'block',
+                        height: `${areaHeight}px`,
+                        width: `${areaWidth}px`,
                         border: '1px solid',
                         background: 'green',
                         boxShadow: '10px 10px 10px lightgray',
@@ -70,7 +75,7 @@ const App = () => {
                     {Array(noSquares)
                         .fill()
                         .map((x, i) => (
-                            <Square key={i} />
+                            <Square width={squareWidth} height={squareHeight} key={i} />
                         ))}
                 </div>
             </div>

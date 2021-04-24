@@ -6,8 +6,8 @@ app = Flask(__name__)
 def api():
     return {
         'message': 'Sent from Flask backend :)',
-        'columns': 10,
-        'rows': 10,
-        'area_height': 800,
-        'area_width': 800,
+        'columns': 20,
+        'rows': 20,
+        'area_width': 600,
+        'area_height': 600,
     }
