@@ -58,7 +58,7 @@ const GetInitDataFromAPI = () => {
     const [data, setData] = React.useState(null)
 
     React.useEffect(() => {
-        fetch('/send')
+        fetch('/dimensions')
             .then(response => response.json())
             .then(message => {
                 setData(message)
