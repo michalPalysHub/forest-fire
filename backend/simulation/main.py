@@ -1,7 +1,6 @@
 from flask import jsonify
 from random import randint
 
-
 COLUMNS = 40
 ROWS = 20
 SQUARE_SIZE = 30
@@ -19,3 +18,7 @@ class Simulation:
         content = jsonify(forest_states=forest_states)
 
         return content
+
+        # TODO: z tego co zauważyłem, to każde pobranie z API danych powoduje odświeżenie api view (kto by pomyślał XD)
+        # więc może to na froncie powinno się odbywać cykliczne wywoływanie GetDataFromApi? Np. każdorazowe uruchomienie
+        # GetDataFromApi wywołuje na backendzie funkcje pchającą symulację do przodu i zwracającą jsona na view.
