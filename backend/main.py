@@ -2,10 +2,9 @@ from flask import Flask, request
 
 app = Flask(__name__)
 
-COLUMNS = 20
+COLUMNS = 40
 ROWS = 20
-AREA_WIDTH = 600
-AREA_HEIGHT = 600
+SQUARE_SIZE = 30
 
 
 @app.route('/send', methods=['GET'])
@@ -14,8 +13,7 @@ def send():
         'message': 'Sent from Flask backend :)',
         'columns': COLUMNS,
         'rows': ROWS,
-        'area_width': AREA_WIDTH,
-        'area_height': AREA_HEIGHT,
+        'squareSize': SQUARE_SIZE,
     }
 
 

@@ -13,7 +13,7 @@ const GetDataFromAPI = () => {
     }, [])
 
     return data
-}
+};
 
 const PostDataToAPI = () => {
     const message = {'message': 'Sent from React frontend :)'}
@@ -26,15 +26,15 @@ const PostDataToAPI = () => {
         },
         body: JSON.stringify(message)
     })
-}
+};
 
 const Square = (props) => {
     const [color, setColor] = React.useState('lightgreen');
 
     const squareStyle = {
         outline: 'none',
-        height: `${props.width}px`,
-        width: `${props.height}px`,
+        height: `${props.size}px`,
+        width: `${props.size}px`,
         float: 'left', // kolejne kwadraty nie rozszerzają kontenera, ustawiają się poniżej
         borderRadius: '2px',
         borderWidth: '1px',
@@ -59,10 +59,9 @@ const App = () => {
 
     const rows = Data.rows  // m wierszy
     const columns = Data.columns // n kolumn
-    const areaHeight = Data.area_height // wysokosc calej planszy
-    const areaWidth = Data.area_width // szerokosc calej planszy
-    const squareHeight = areaHeight/columns // wysokość kwadratu w px
-    const squareWidth = areaWidth/rows // szerokość kwadratu w px
+    const squareSize = Data.squareSize
+    const areaHeight = rows * squareSize // wysokosc calej planszy
+    const areaWidth = columns * squareSize // szerokosc calej planszy
 
     const noSquares = rows*columns
 
@@ -86,7 +85,7 @@ const App = () => {
                     {Array(noSquares)
                         .fill()
                         .map((x, i) => (
-                            <Square width={squareWidth} height={squareHeight} key={i} />
+                            <Square size={squareSize} key={i} />
                         ))}
                 </div>
             </div>
