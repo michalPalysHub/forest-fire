@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import Square from './components/square'
 
 const App = () => {
-    // Pobranie danych inicjacyjnych z API
-    const Data = GetInitDataFromAPI()
+    // Pobranie danych inicjacyjnych z API - endpoint '/dimensions'.
+    const Data = GetDataFromAPI('dimensions')
     if (Data === null) { return null }
+    console.log(Data)
     const noRows = Data.rows
     const noColumns = Data.columns
     const squareSize = Data.squareSize
+
 
     // Utworzenie listy współrzędnych dla kolejnych kwadratów
     // Konieczne w celu przypisania im odpowiednich współrzędnych
@@ -54,19 +56,29 @@ const App = () => {
     );
 };
 
-const GetInitDataFromAPI = () => {
+const GetDataFromAPI = (endpoint, timeout=null) => {
     const [data, setData] = React.useState(null)
 
     React.useEffect(() => {
-        fetch('/dimensions')
-            .then(response => response.json())
-            .then(message => {
-                setData(message)
-            })
+        function getData() {
+            fetch(endpoint)
+                .then(response => response.json())
+                .then(message => setData(message))
+        }
+        getData()
+        // Jeżeli jakakolwiek wartość timeout jest podana funkcja będzie wywoływana co timeout[ms] czasu.
+        if (timeout != null) {
+            const interval = setInterval(() => getData(), timeout)
+            return () => {
+                clearInterval(interval)
+            }
+        }
     }, [])
 
     return data
 };
+
+
 
 const PostDataToAPI = () => {
     const message = { 'message': 'Sent from React frontend :)' }

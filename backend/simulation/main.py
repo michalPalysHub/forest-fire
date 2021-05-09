@@ -1,6 +1,7 @@
 from flask import jsonify
 from random import randint
 
+# Do testów.
 COLUMNS = 40
 ROWS = 20
 SQUARE_SIZE = 30

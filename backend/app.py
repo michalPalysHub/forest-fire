@@ -37,4 +37,3 @@ def data_receive():
 
 # dla każdego kwadratu i, j, foresttype
 # 1-8, 1-5 ryzyka, 6-8 zagrożenia
-# 1-8, 1-5 ryzyka, 6-8 zagrożenia
