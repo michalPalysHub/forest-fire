@@ -24,17 +24,13 @@ def dimensions_set():
 @app.route('/simulation', methods=['GET'])
 def simulation_run():
     content = simulation.get_data()
-    print(content)
 
     return content
 
 
-@app.route('/receive', methods=['POST'])
-def data_receive():
-    message = request.json
-    print(message)
+@app.route('/init_data', methods=['POST'])
+def init_data_receive():
+    squares_data = request.json
+    simulation.set_init_data(squares_data)
 
-    return message
-
-# dla każdego kwadratu i, j, foresttype
-# 1-8, 1-5 ryzyka, 6-8 zagrożenia
+    return squares_data

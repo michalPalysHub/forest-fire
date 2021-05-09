@@ -89,8 +89,8 @@ const GetDataFromAPI = (endpoint, timeout = null) => {
     return data
 };
 
-const PostDataToAPI = (message) => {
-    fetch('/receive', {
+const PostDataToAPI = (message, endpoint) => {
+    fetch(endpoint, {
         method: 'POST',
         cache: 'no-cache',
         headers: {
@@ -101,7 +101,7 @@ const PostDataToAPI = (message) => {
 };
 
 const handleStartClick = () => {
-    PostDataToAPI(squaresData);
+    PostDataToAPI(squaresData, 'init_data');
 }
 
 export default App;
