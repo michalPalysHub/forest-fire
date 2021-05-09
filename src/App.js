@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Square from './components/square'
 
+import Button from 'react-bootstrap/Button';
+import './App.css';
 
 // JSON zawierający dane i, j, forestType dla wszystkich komponentów
 const squaresData = {}
@@ -34,20 +36,16 @@ const App = () => {
     }
 
     return (
-        <div>
-            <h1> Forest fire </h1>
-            <div style={
-                {
-                    display: 'flex',
-                    justifyContent: 'center',
-                }}>
+        <div className="main">
+            <h1 className="centered"> Forest fire </h1>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <div style={
                     {
                         display: 'block',
                         height: `${noRows * squareSize}px`,
                         width: `${noColumns * squareSize}px`,
-                        border: '1px solid',
-                        background: 'green',
+                        backgroundColor: 'white',
+                        backgroundImage: 'url(/img/map1.png)',
                         boxShadow: '10px 10px 10px lightgray',
                     }
                 }>
@@ -62,7 +60,9 @@ const App = () => {
                     ))}
                 </div>
             </div>
-            <button onClick={handleStartClick}>Start</button>
+            <div className="centered" >
+                <Button variant="info" onClick={handleStartClick}>Start</Button>
+            </div>
         </div>
     );
 };

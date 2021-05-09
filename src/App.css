@@ -1,0 +1,9 @@
+.centered {
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.main {
+    background-color: rgba(222, 251, 255, 0.3);
+}

@@ -22,8 +22,9 @@ const Square = (props) => {
         height: `${props.size}px`,
         width: `${props.size}px`,
         float: 'left', // kolejne kwadraty nie rozszerzają kontenera, ustawiają się poniżej
-        borderRadius: '2px',
+        borderRadius: '1px',
         borderWidth: '1px',
+        opacity: 0.6,
         background: `${forestTypeToSquareColorDict[forestType]}`,
     };
 
