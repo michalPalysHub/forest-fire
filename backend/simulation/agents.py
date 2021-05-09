@@ -1,6 +1,13 @@
 class SensorAgent:
-    def __init__(self):
-        pass
+    SECTOR_SIZE = 5
+
+    def __init__(self, uid, i, j):
+        self.uid = uid
+        self.i = i
+        self.j = j
+
+    def __repr__(self):
+        return f'({self.i},{self.j})'
 
 
 class TransferAgent:
@@ -10,7 +17,10 @@ class TransferAgent:
 
 class AnalystAgent:
     def __init__(self):
-        pass
+        self.ffdis = dict()
+
+    def prepare_buf(self, data):
+        self.ffdis = {square_id: None for square_id in data}
 
 
 class OverseerAgent:
