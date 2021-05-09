@@ -24,6 +24,7 @@ def dimensions_set():
 @app.route('/simulation', methods=['GET'])
 def simulation_run():
     content = simulation.get_data()
+    print(content)
 
     return content
 

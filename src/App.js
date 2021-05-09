@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import Square from './components/square'
 
+
+// JSON zawierający dane i, j, forestType dla wszystkich komponentów
+const squaresData = {}
+
 const App = () => {
     // Pobranie danych inicjacyjnych z API - endpoint '/dimensions'.
     const Data = GetDataFromAPI('dimensions')
@@ -9,7 +13,6 @@ const App = () => {
     const noRows = Data.rows
     const noColumns = Data.columns
     const squareSize = Data.squareSize
-
 
     // Utworzenie listy współrzędnych dla kolejnych kwadratów
     // Konieczne w celu przypisania im odpowiednich współrzędnych
@@ -21,14 +24,14 @@ const App = () => {
         }
     }
 
-    // Utworzenie listy kwadratów
-    const squares = matrixElementsCoords.map((coords, i) => (
-        <Square size={squareSize}
-            i={coords[0]}
-            j={coords[1]}
-            key={i}
-        />
-    ))
+    // Funkcja wywołania po każdej zmianie danego komponentu Square
+    const onSquareUpdate = (id, i, j, forestType) => {
+        squaresData[id] = {
+            'i': i,
+            'j': j,
+            'forestType': forestType,
+        }
+    }
 
     return (
         <div>
@@ -48,7 +51,15 @@ const App = () => {
                         boxShadow: '10px 10px 10px lightgray',
                     }
                 }>
-                    {squares}
+                    {matrixElementsCoords.map((coords, i) => (
+                        <Square size={squareSize}
+                            id={i}
+                            i={coords[0]}
+                            j={coords[1]}
+                            onSquareUpdate={onSquareUpdate}
+                            key={i}
+                        />
+                    ))}
                 </div>
             </div>
             <button onClick={handleStartClick}>Start</button>
@@ -56,7 +67,7 @@ const App = () => {
     );
 };
 
-const GetDataFromAPI = (endpoint, timeout=null) => {
+const GetDataFromAPI = (endpoint, timeout = null) => {
     const [data, setData] = React.useState(null)
 
     React.useEffect(() => {
@@ -78,11 +89,7 @@ const GetDataFromAPI = (endpoint, timeout=null) => {
     return data
 };
 
-
-
-const PostDataToAPI = () => {
-    const message = { 'message': 'Sent from React frontend :)' }
-
+const PostDataToAPI = (message) => {
     fetch('/receive', {
         method: 'POST',
         cache: 'no-cache',
@@ -94,12 +101,7 @@ const PostDataToAPI = () => {
 };
 
 const handleStartClick = () => {
-    // TODO: w jakiś sposób pozyskiwać i, j, forestType ze state squares i zwracać w JSONie 
-    // do API przy pomocy PostDataToAPI. Możliwe, że trzeba gdzieś przechowywać te dane
-    // (w jakimś słowniku właśnie??) i dodać w Square funkcję onChange, która updateuje te dane
-    // w nadrzędnym komponencie - App.
-    PostDataToAPI();
-    console.log("Start")
+    PostDataToAPI(squaresData);
 }
 
 export default App;

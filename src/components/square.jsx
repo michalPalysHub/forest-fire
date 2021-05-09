@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Słownik umożliwiający reprezentację danego typu lasu określonym kolorem kwadratu
 const forestTypeToSquareColorDict = {
@@ -30,8 +30,12 @@ const Square = (props) => {
     // Obsługa kliknięcia
     const handleClick = () => {
         setForestType((forestType + 1) % Object.keys(forestTypeToSquareColorDict).length)
-        console.log('i:', i, ' j:', j, ' forestType:', forestType) // sprawdzenie
     };
+
+    // Funkcja wywołania po każdym renderowaniu komponentu (po każdej jego zmianie)
+    useEffect(() => {
+        props.onSquareUpdate(props.id, i, j, forestType)
+    });
 
     // Zwracany kod HTML
     return <button style={squareStyle}
