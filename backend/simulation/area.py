@@ -1,4 +1,4 @@
-from pprint import pprint
+from random import randint
 
 WIND_DIRECTORIES = {
     1: 'N',
@@ -68,7 +68,7 @@ class ForestSquare:
         self.wind_speed = float()
         self.wind_directory = str()
 
-        self.state = int()
+        self.square_state = randint(1,8)
 
         self.square_data = dict()
 
@@ -85,6 +85,6 @@ class ForestSquare:
                             'litter_moisture': self.litter_moisture,
                             'wind_speed': self.wind_speed,
                             'wind_directory': self.wind_directory,
-                            'state': self.state}
+                            'square_state': self.square_state}
 
         return self.square_data

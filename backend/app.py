@@ -21,16 +21,16 @@ def dimensions_set():
     return content
 
 
-@app.route('/simulation', methods=['GET'])
-def simulation_run():
-    content = simulation.get_data()
-
-    return content
-
-
 @app.route('/init_data', methods=['POST'])
 def init_data_receive():
     squares_data = request.json
     simulation.set_init_data(squares_data)
 
     return squares_data
+
+
+@app.route('/simulation', methods=['GET'])
+def simulation_run():
+    content = simulation.get_data()
+
+    return content

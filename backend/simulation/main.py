@@ -22,6 +22,6 @@ class Simulation:
         Tu wstępnie będzie generowany json z danymi na temat sektorow lasu.
         """
         forest_states = self.forest_area.get_forest_data()
-        content = jsonify(forest_states=forest_states)
+        content = jsonify(forest_states)
 
         return content
