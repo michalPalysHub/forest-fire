@@ -1,8 +1,7 @@
 from flask import Flask, request, jsonify
 
 from simulation.main import Simulation
-from simulation.area import COLUMNS, ROWS, SQUARE_SIZE
-
+from simulation.constants import COLUMNS, ROWS, SQUARE_SIZE
 
 app = Flask(__name__)
 simulation = Simulation()
@@ -10,10 +9,9 @@ simulation = Simulation()
 
 @app.route('/dimensions', methods=['GET'])
 def dimensions_set():
-    dimensions_message = jsonify(message='Sent from Flask backend :)',
-                      columns=COLUMNS,
-                      rows=ROWS,
-                      squareSize=SQUARE_SIZE)
+    dimensions_message = jsonify(columns=COLUMNS,
+                                 rows=ROWS,
+                                 squareSize=SQUARE_SIZE)
 
     return dimensions_message
 

@@ -2,31 +2,7 @@ from random import randint, uniform
 from math import ceil
 
 from .agents import SensorAgent
-
-# Rozmiary planszy.
-COLUMNS = 40
-ROWS = 20
-SQUARE_SIZE = 30
-
-# Kierunki wiatru, tak o wypisane.
-WIND_DIRECTORIES = {
-    1: 'N',
-    2: 'NE',
-    3: 'E',
-    4: 'SE',
-    5: 'S',
-    6: 'SW',
-    7: 'W',
-    8: 'NW'
-}
-
-# Typy lasu - tak jak wyżej.
-FOREST_TYPES = {
-    0: 'NONE',  # Brak lasu
-    1: 'DECIDOUS',  # Las liściasty
-    2: 'MIXED',  # Las mieszany
-    3: 'CONIFEROUS'  # Las iglasty
-}
+from .constants import COLUMNS, ROWS, CO2_START_VALUES, PM25_START_VALUE
 
 
 class ForestArea:
@@ -113,11 +89,13 @@ class ForestSquare:
         self.j = j
         self.forest_type = forest_type
 
-        self.temperature = 28 + round(uniform(-2,2), 1)
-        self.air_humidity = 13 + round(uniform(-3,3), 1)
-        self.litter_moisture = 8 + round(uniform(-3,3), 1) # Wilgotność ściółki.
-        self.wind_speed = 8 + round(uniform(-1,1), 1) # Prędkość wiatru w km/h.
+        self.temperature = 28 + round(uniform(-2,2), 1) # Temperatura powietrza [°C].
+        self.air_humidity = 13 + round(uniform(-3,3), 1) # Wilgtoność powietrza [%].
+        self.litter_moisture = 8 + round(uniform(-3,3), 1) # Wilgotność ściółki [%].
+        self.wind_speed = 8 + round(uniform(-1,1), 1) # Prędkość wiatru  [km/h].
         self.wind_directory = 'NE'
+        self.co2_value = CO2_START_VALUES[self.forest_type] + round(uniform(-5,5), 1) # Wartość stężenia CO2 [ppm].
+        self.pm25_value = PM25_START_VALUE + round(uniform(-2, 2), 1) # Wartość stężenia PM2.5 [ug/m3].
 
         self.square_state = randint(1,8)
 
@@ -142,18 +120,23 @@ class ForestSquare:
                             'litter_moisture': self.litter_moisture,
                             'wind_speed': self.wind_speed,
                             'wind_directory': self.wind_directory,
-                            'square_state': self.square_state}
+                            'co2_value': self.co2_value,
+                            'pm25_value': self.pm25_value,
+                            'square_state': self.square_state,
+                            }
 
         return self.square_data
 
-    def update_square_data(self, temperature, humidity, litter_moisture, wind_speed, wind_directory, square_state):
+    def update_square_data(self, **kwargs):
         """
         Aktualizacja parametrów danego sektoru na skutek uruchomionej symulacji.
         """
-        self.temperature = temperature
-        self.air_humidity = humidity
-        self.litter_moisture = litter_moisture
-        self.wind_speed = wind_speed
-        self.wind_directory = wind_directory
-        self.square_state = square_state
+        self.temperature = kwargs['temperature']
+        self.air_humidity = kwargs['humidity']
+        self.litter_moisture = kwargs['litter_moisture']
+        self.wind_speed = kwargs['wind_speed']
+        self.wind_directory = kwargs['wind_directory']
+        self.co2_value = kwargs['co2_value']
+        self.pm25_value = kwargs['pm25_value']
+        self.square_state = kwargs['square_state']
 
