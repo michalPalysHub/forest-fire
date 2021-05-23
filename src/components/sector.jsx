@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
 // Słownik umożliwiający reprezentację danego typu lasu określonym kolorem kwadratu
-const forestTypeToSquareColorDict = {
+const forestTypeToSectorColorDict = {
     0: 'white',         // brak
     1: 'lightgreen',    // liściasty
     2: 'forestgreen',   // mieszany
     3: 'darkgreen',     // iglasty
 };
 
-const forestStateToSquareBorderColorDict = {
+const forestStateToSectorBorderColorDict = {
     0: null, // Domyślnie brak koloru krawędzi.
     1: '#0CF228', // Zagrożenie niskie.
     2: '#0E921E', // Zagrożenie umiarkowane.
@@ -22,45 +22,55 @@ const forestStateToSquareBorderColorDict = {
 }
 
 // Słownik umożliwiający reprezentację stanu zagrożenia pożarem lub jego zaawansowania dla danego sektora.
-const Square = (props) => {
+const Sector = (props) => {
     // Zmienne stanu reprezentujące współrzędne służące do identyfikacji danego kwadratu
     const [i, setRowIndex] = useState(props.i);
     const [j, setColumnIndex] = useState(props.j);
 
     // Zmienna określająca typ lasu dla danego kwadratu
+<<<<<<< HEAD:src/components/square.jsx
     const [forestType, setForestType] = useState(0)
+=======
+    const [forestType, setForestType] = useState(_ => {
+        if (i < 5 && j < 5) {
+            return 1;
+        } else {
+            return 0;
+        }
+    })
+>>>>>>> 2732a73 (squares -> sectors):src/components/sector.jsx
 
     // Zmienna przechowująca stan danego sektora.
     const forestState = 0;
     console.log(forestState)
 
     // Informacje na temat stylu w CSS
-    const squareStyle = {
+    const sectorStyle = {
         outline: 'none',
         height: `${props.size}px`,
         width: `${props.size}px`,
         float: 'left', // kolejne kwadraty nie rozszerzają kontenera, ustawiają się poniżej
         borderRadius: '1px',
         borderWidth: '2px',
-        borderColor: `${forestStateToSquareBorderColorDict[forestState]}`,
+        borderColor: `${forestStateToSectorBorderColorDict[forestState]}`,
         opacity: 0.6,
-        background: `${forestTypeToSquareColorDict[forestType]}`,
+        background: `${forestTypeToSectorColorDict[forestType]}`,
     };
 
     // Obsługa kliknięcia
     const handleClick = () => {
-        setForestType((forestType + 1) % Object.keys(forestTypeToSquareColorDict).length)
+        setForestType((forestType + 1) % Object.keys(forestTypeToSectorColorDict).length)
     };
 
     // Funkcja wywołania po każdym renderowaniu komponentu (po każdej jego zmianie)
     useEffect(() => {
-        props.onSquareUpdate(props.id, i, j, forestType)
+        props.onSectorUpdate(props.id, i, j, forestType)
     });
 
     // Zwracany kod HTML
-    return <button style={squareStyle}
+    return <button style={sectorStyle}
         onClick={handleClick}
     />
 };
 
-export default Square;
+export default Sector;

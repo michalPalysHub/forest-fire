@@ -1,11 +1,11 @@
 import React from 'react';
-import Square from './components/square'
+import Sector from './components/sector'
 
 import Button from 'react-bootstrap/Button';
 import './App.css';
 
 // JSON zawierający dane i, j, forestType dla wszystkich komponentów
-const squaresData = {}
+const sectorsData = {}
 
 const App = () => {
     // Pobranie danych inicjacyjnych z API - endpoint '/dimensions'.
@@ -14,7 +14,7 @@ const App = () => {
     console.log(Data)
     const noRows = Data.rows
     const noColumns = Data.columns
-    const squareSize = Data.squareSize
+    const sectorSize = Data.sectorSize
 
     // Utworzenie listy współrzędnych dla kolejnych kwadratów
     // Konieczne w celu przypisania im odpowiednich współrzędnych
@@ -26,9 +26,9 @@ const App = () => {
         }
     }
 
-    // Funkcja wywołania po każdej zmianie danego komponentu Square
-    const onSquareUpdate = (id, i, j, forestType) => {
-        squaresData[id] = {
+    // Funkcja wywołania po każdej zmianie danego komponentu Sector
+    const onSectorUpdate = (id, i, j, forestType) => {
+        sectorsData[id] = {
             'i': i,
             'j': j,
             'forestType': forestType,
@@ -42,19 +42,19 @@ const App = () => {
                 <div style={
                     {
                         display: 'block',
-                        height: `${noRows * squareSize}px`,
-                        width: `${noColumns * squareSize}px`,
+                        height: `${noRows * sectorSize}px`,
+                        width: `${noColumns * sectorSize}px`,
                         backgroundColor: 'white',
                         backgroundImage: 'url(/img/map1.png)',
                         boxShadow: '10px 10px 10px lightgray',
                     }
                 }>
                     {matrixElementsCoords.map((coords, i) => (
-                        <Square size={squareSize}
+                        <Sector size={sectorSize}
                             id={i}
                             i={coords[0]}
                             j={coords[1]}
-                            onSquareUpdate={onSquareUpdate}
+                            onSectorUpdate={onSectorUpdate}
                             key={i}
                         />
                     ))}
@@ -101,7 +101,7 @@ const PostDataToAPI = (message, endpoint) => {
 };
 
 const handleStartClick = () => {
-    PostDataToAPI(squaresData, 'init_data');
+    PostDataToAPI(sectorsData, 'init_data');
 }
 
 export default App;

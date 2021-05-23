@@ -1,7 +1,7 @@
 # Rozmiary planszy.
 COLUMNS = 40
 ROWS = 20
-SQUARE_SIZE = 30
+SECTOR_SIZE = 30
 
 # Kierunki wiatru, tak o wypisane.
 WIND_DIRECTORIES = {
