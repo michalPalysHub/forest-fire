@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Board from './components/Board'
 
 import Button from 'react-bootstrap/Button';
+import { RangeStepInput } from 'react-range-step-input';
 import './App.css';
 
 const App = () => {
@@ -26,8 +27,17 @@ const App = () => {
     // Flaga informująca o tym, czy dane inicjalizacyjne zostały poprawnie odebrane przez API
     const [didInit, setDidInit] = useState(false);
 
-    // JSON zawierający odświeżone dane symulacji pochodzące z API 
+    // Flaga informująca o tym, czy symulacja jest w trakcie działania
+    const [simulationRun, setSimulationRun] = useState(false);
+
+    // Timer służący do uruchamiania/zatrzymywania symulacji
+    const [timer, setTimer] = useState(null);
+
+    // JSON zawierający aktualne dane symulacji pochodzące z API 
     const [simulationData, setSimulationData] = useState({});
+
+    // Częstotliwość pobierania danych z /simulation, szybkość symulacji - zmieniana suwakiem
+    const [timeout, setTimeout] = useState(500);
 
     const getSimulationDataFromApi = () => {
         fetch('/simulation')
@@ -36,11 +46,16 @@ const App = () => {
 >>>>>>> d0a0060 (dodano obsługę przycisków oraz Board.js)
     }
 
-    let interval;
-
     // Uruchomienie symulacji
     const handleStartClick = () => {
-        interval = setInterval(() => getSimulationDataFromApi(), 500)
+        setSimulationRun(true);
+        setTimer(setInterval(() => getSimulationDataFromApi(), timeout))
+    }
+
+    // Zatrzymanie symulacji
+    const handleStopClick = () => {
+        setSimulationRun(false);
+        clearInterval(timer);
     }
 
 <<<<<<< HEAD
@@ -74,10 +89,13 @@ const App = () => {
 =======
     // Zresetowanie symulacji
     const handleResetClick = () => {
-        setDidInit(false);
-        clearInterval(interval);
-        // TODO: resetuje timer
-        // postDataToAPI('Data reset', '/reset');
+        setDidInit(false); 
+        setSimulationRun(false);
+        clearInterval(timer);
+        postDataToAPI('Data reset', '/reset');
+        for (var id = 0; id < Object.keys(simulationData).length; id++){
+            simulationData[id].sector_state = 0;
+        }
     }
 
     // Zmiana statusu inicjalizacji danych w API
@@ -85,12 +103,30 @@ const App = () => {
         setDidInit(true);
     }
 
+    // Zmiana częstotliwości pobierania danych z /simulation, szybkości symulacji
+    const onTimeoutSliderChange = (e) => {
+        const newVal = e.target.value;
+        setTimeout(newVal);
+    }
+
     // Warunkowe wyświetlanie/ukrywanie odpowiednich przycisków
-    let buttonPanel;
+    let buttonPanel, startStopSimBtn;
     if (didInit === true) {
+        if (simulationRun){
+            startStopSimBtn = <Button variant="info" onClick={handleStopClick} style={{ marginRight: '2px' }}>Stop</Button>
+        } else {
+            startStopSimBtn = <Button variant="info" onClick={handleStartClick} style={{ marginRight: '2px' }}>Start</Button>
+        }
         buttonPanel = <div>
-            <Button variant="info" onClick={handleStartClick} style={{ marginRight: '2px' }}>Start</Button>
+            {startStopSimBtn}
             <Button variant="info" onClick={handleResetClick}>Reset</Button>
+            <p style={{marginTop: '5px'}}>Szybkość symulacji: {timeout} [ms]</p>
+            <RangeStepInput 
+                min={100} max={3000}
+                style={simulationRun ? {pointerEvents: "none", opacity: "0.4"} : {}}
+                value={timeout} step={100}
+                onChange={onTimeoutSliderChange}
+            />
         </div>
     } else {
         buttonPanel = <div></div>
@@ -108,18 +144,18 @@ const App = () => {
     );
 };
 
-const GetDataFromAPI = (endpoint) => {
-    const [data, setData] = useState(null)
-
-    useEffect(() => {
-        fetch(endpoint)
-            .then(response => response.json())
-            .then(message => setData(message))
-    }, [])
-
-    return data
+const postDataToAPI = (message, endpoint) => {
+    fetch(endpoint, {
+        method: 'POST',
+        cache: 'no-cache',
+        headers: {
+            'content_type': 'application/json'
+        },
+        body: JSON.stringify(message)
+    });
 };
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 const PostDataToAPI = (message, endpoint) => {
     fetch(endpoint, {
@@ -151,4 +187,6 @@ const handleStartClick = () => {
 // };
 >>>>>>> d0a0060 (dodano obsługę przycisków oraz Board.js)
 
+=======
+>>>>>>> a527e30 (przyciski Start, Stop, Reset działają teraz poprawnie, dodano suwak do regulacji szybkości symulacji)
 export default App;

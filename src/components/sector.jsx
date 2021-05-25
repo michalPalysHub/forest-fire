@@ -51,9 +51,15 @@ const Sector = (props) => {
         width: `${props.size}px`,
         float: 'left', // kolejne kwadraty nie rozszerzają kontenera, ustawiają się poniżej
         borderRadius: '1px',
+<<<<<<< HEAD
         borderWidth: '2px',
         borderColor: `${forestStateToSectorBorderColorDict[forestState]}`,
         opacity: 0.6,
+=======
+        borderWidth: '3px',
+        borderColor: `${forestStateToSectorBorderColorDict[sectorState]}`,
+        opacity: 0.4,
+>>>>>>> a527e30 (przyciski Start, Stop, Reset działają teraz poprawnie, dodano suwak do regulacji szybkości symulacji)
         background: `${forestTypeToSectorColorDict[forestType]}`,
     };
 

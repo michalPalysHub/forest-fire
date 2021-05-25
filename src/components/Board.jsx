@@ -74,7 +74,7 @@ const Board = (props) => {
 
     return (
         <div>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div style={{ display: 'flex', justifyContent: 'center',}}>
                 <div style={
                     {
                         display: 'block',
