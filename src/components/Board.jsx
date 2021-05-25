@@ -92,6 +92,7 @@ const Board = (props) => {
                             j={coords[1]}
                             sectorState={getSectorState(i)}
                             onSectorUpdate={onSectorUpdate}
+                            didInit={props.didInit}
                             key={i}
                         />
                     ))}

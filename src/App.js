@@ -94,7 +94,9 @@ const App = () => {
         clearInterval(timer);
         postDataToAPI('Data reset', '/reset');
         for (var id = 0; id < Object.keys(simulationData).length; id++){
-            simulationData[id].sector_state = 0;
+            if (simulationData[id] != null){
+                simulationData[id].sector_state = 0;
+            }
         }
     }
 

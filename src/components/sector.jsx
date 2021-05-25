@@ -61,11 +61,14 @@ const Sector = (props) => {
         opacity: 0.4,
 >>>>>>> a527e30 (przyciski Start, Stop, Reset działają teraz poprawnie, dodano suwak do regulacji szybkości symulacji)
         background: `${forestTypeToSectorColorDict[forestType]}`,
+        pointerEvents: `${props.didInit ? 'none' : 'all'}`,
     };
 
     // Obsługa kliknięcia
     const handleClick = () => {
-        setForestType((forestType + 1) % Object.keys(forestTypeToSectorColorDict).length)
+        if (props.didInit === false){
+            setForestType((forestType + 1) % Object.keys(forestTypeToSectorColorDict).length)
+        }
     };
 
     // Funkcja wywołania po każdym renderowaniu komponentu (po każdej jego zmianie)
