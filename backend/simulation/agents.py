@@ -1,3 +1,7 @@
+"""
+Nie jestem do końca pewien, czy to w ogóle będzie potrzebne. :_)
+"""
+
 class SensorAgent:
     SECTOR_SIZE = 5
 

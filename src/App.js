@@ -43,6 +43,7 @@ const App = () => {
     const handleStopClick = () => {
         setSimulationRun(false);
         clearInterval(timer);
+        postDataToAPI('Stop simulation', '/stop')
     }
 
     // Zresetowanie symulacji
@@ -63,14 +64,14 @@ const App = () => {
     const onDataInit = () => {
         setDidInit(true);
         getSimulationDataFromApi()
-        postDataToAPI({'newLoopTime': timeout}, '/settings/looptime')
+        postDataToAPI({'newLoopTime': timeout}, '/settings')
     }
 
     // Zmiana częstotliwości pobierania danych z /simulation, szybkości symulacji
     const onTimeoutSliderChange = (e) => {
         const newVal = e.target.value;
         setTimeout(newVal);
-        postDataToAPI({'newLoopTime': newVal}, '/settings/looptime')
+        postDataToAPI({'newLoopTime': newVal}, '/settings')
     }
 
     // Warunkowe wyświetlanie/ukrywanie odpowiednich przycisków

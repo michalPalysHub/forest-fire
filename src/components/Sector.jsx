@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 
 // Słownik umożliwiający reprezentację danego typu lasu określonym kolorem kwadratu
 const forestTypeToSectorColorDict = {
-    0: 'white',         // brak
-    1: 'lightgreen',    // liściasty
-    2: 'forestgreen',   // mieszany
-    3: 'darkgreen',     // iglasty
+    0: '#c0c0c0',         // brak
+    1: '#3fd54c',    // liściasty
+    2: '#2a9024',   // mieszany
+    3: '#1e491d',     // iglasty
 };
 
 const forestStateToSectorBorderColorDict = {
-    0: '#C0C0C0', // Domyślnie brak koloru krawędzi.
-    1: '#00c21a', // Zagrożenie niskie.
+    0: '#c0c0c0', // Domyślnie brak koloru krawędzi.
+    1: '#00ff22', // Zagrożenie niskie.
     2: '#73c205', // Zagrożenie umiarkowane.
     3: '#efe309', // Zagrożenie wysokie.
     4: '#f08808', // Zagrożenie bardzo wysokie.
