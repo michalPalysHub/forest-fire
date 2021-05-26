@@ -11,9 +11,9 @@ const Board = (props) => {
     // Pobranie danych inicjacyjnych z API - endpoint '/dimensions'.
     const boardDimensions = GetDataFromAPI('/dimensions')
     if (boardDimensions === null) return null;
-    const noRows = boardDimensions.rows
-    const noColumns = boardDimensions.columns
-    const sectorSize = boardDimensions.sectorSize
+    const noRows = 20
+    const noColumns = 40
+    const sectorSize = 30
 
     // Utworzenie listy współrzędnych dla kolejnych sektorów
     const matrixElementsCoords = [];
@@ -41,7 +41,7 @@ const Board = (props) => {
             if (id in props.simulationData) {
                 return props.simulationData[id].sector_state;
             } else {
-                return {};
+                return 0;
             }
         }
     }
@@ -59,7 +59,7 @@ const Board = (props) => {
             if (response.status === 200) {
                 props.onDataInit();
             }
-        });
+        })
     }
 
     // Warunkowe wyświetlanie/ukrywanie odpowiednich przycisków
@@ -68,7 +68,7 @@ const Board = (props) => {
         buttonPanel = <div></div>;
     } else {
         buttonPanel = <div className="centered" >
-            <Button variant="info" onClick={handleInitClick}>Init data</Button>
+            <Button variant="info" onClick={handleInitClick}>Init</Button>
         </div>;
     }
 

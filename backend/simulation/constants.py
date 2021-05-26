@@ -1,8 +1,3 @@
-# Rozmiary planszy.
-COLUMNS = 40
-ROWS = 20
-SECTOR_SIZE = 30
-
 # Kierunki wiatru, tak o wypisane.
 WIND_DIRECTORIES = {
     1: 'N',
@@ -30,7 +25,19 @@ CO2_START_VALUES = {
     3: 200
 }
 
+# Wartości współczynnika k używanego do obliczenia FFDI w zależności od typu lasu.
+K_FACTORS = {
+    1: 1.00,
+    2: 1.05,
+    3: 1.10
+}
+
 # Początkowa wartość PM2.5 [ug/m3].
 PM25_START_VALUE = 25
 
+<<<<<<< HEAD
 # TODO: uzupełnić stałe o słownik z zależnościami ryzyk oraz stopni zaawansowania pożaru od wartości PM2.5 i CO2.
+=======
+# Lista parametrów pogodowych, które zmieniają się podczas rozprzestrzeniania się pożaru.
+CHANGEABLE_PARAMETERS = ['temperature', 'air_humidity', 'litter_moisture', 'co2', 'pm25']
+>>>>>>> f0b11df (Integrated backend with front changes.)

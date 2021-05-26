@@ -33,23 +33,33 @@ const App = () => {
     // Timer służący do uruchamiania/zatrzymywania symulacji
     const [timer, setTimer] = useState(null);
 
-    // JSON zawierający aktualne dane symulacji pochodzące z API 
-    const [simulationData, setSimulationData] = useState({});
+    // JSON zawierający aktualne dane każdego z sektorów pochodzące z API
+    const [sectorsData, setSectorsData] = useState({});
 
     // Częstotliwość pobierania danych z /simulation, szybkość symulacji - zmieniana suwakiem
-    const [timeout, setTimeout] = useState(500);
+    const [timeout, setTimeout] = useState(750);
 
     const getSimulationDataFromApi = () => {
-        fetch('/simulation')
+        fetch('/sectors')
             .then(response => response.json())
+<<<<<<< HEAD
             .then(message => setSimulationData(message));
 >>>>>>> d0a0060 (dodano obsługę przycisków oraz Board.js)
+=======
+            .then(message => {
+                setSectorsData(message['sectors'])
+                if (message['simulation_run'] === false) {
+                    handleStopClick()
+                }}
+                );
+>>>>>>> f0b11df (Integrated backend with front changes.)
     }
 
     // Uruchomienie symulacji
     const handleStartClick = () => {
         setSimulationRun(true);
         setTimer(setInterval(() => getSimulationDataFromApi(), timeout))
+        postDataToAPI('Start simulation', '/start')
     }
 
     // Zatrzymanie symulacji
@@ -91,11 +101,12 @@ const App = () => {
     const handleResetClick = () => {
         setDidInit(false); 
         setSimulationRun(false);
+        setTimeout(750);
         clearInterval(timer);
         postDataToAPI('Data reset', '/reset');
-        for (var id = 0; id < Object.keys(simulationData).length; id++){
-            if (simulationData[id] != null){
-                simulationData[id].sector_state = 0;
+        for (var id = 0; id < Object.keys(sectorsData).length; id++){
+            if (sectorsData[id] != null){
+                sectorsData[id].sector_state = 0;
             }
         }
     }
@@ -103,12 +114,15 @@ const App = () => {
     // Zmiana statusu inicjalizacji danych w API
     const onDataInit = () => {
         setDidInit(true);
+        getSimulationDataFromApi()
+        postDataToAPI({'newLoopTime': timeout}, '/settings/looptime')
     }
 
     // Zmiana częstotliwości pobierania danych z /simulation, szybkości symulacji
     const onTimeoutSliderChange = (e) => {
         const newVal = e.target.value;
         setTimeout(newVal);
+        postDataToAPI({'newLoopTime': newVal}, '/settings/looptime')
     }
 
     // Warunkowe wyświetlanie/ukrywanie odpowiednich przycisków
@@ -122,11 +136,11 @@ const App = () => {
         buttonPanel = <div>
             {startStopSimBtn}
             <Button variant="info" onClick={handleResetClick}>Reset</Button>
-            <p style={{marginTop: '5px'}}>Szybkość symulacji: {timeout} [ms]</p>
+            <p style={{marginTop: '5px'}}>Prędkość symulacji: {timeout} [ms]</p>
             <RangeStepInput 
                 min={100} max={3000}
                 style={simulationRun ? {pointerEvents: "none", opacity: "0.4"} : {}}
-                value={timeout} step={100}
+                value={timeout} step={50}
                 onChange={onTimeoutSliderChange}
             />
         </div>
@@ -137,7 +151,7 @@ const App = () => {
     return (
         <div className="main">
             <h1 className="centered"> Forest fire </h1>
-            <Board onDataInit={onDataInit} didInit={didInit} simulationData={simulationData} />
+            <Board onDataInit={onDataInit} didInit={didInit} simulationData={sectorsData}/>
             <div className="centered" >
                 {buttonPanel}
 >>>>>>> d0a0060 (dodano obsługę przycisków oraz Board.js)

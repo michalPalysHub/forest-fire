@@ -9,6 +9,7 @@ const forestTypeToSectorColorDict = {
 };
 
 const forestStateToSectorBorderColorDict = {
+<<<<<<< HEAD
     0: null, // Domyślnie brak koloru krawędzi.
     1: '#0CF228', // Zagrożenie niskie.
     2: '#0E921E', // Zagrożenie umiarkowane.
@@ -18,6 +19,17 @@ const forestStateToSectorBorderColorDict = {
     6: '#FE0101', // Pożar łatwy do opanowania.
     7: '#C50000', // Pożar trudny, ale możliwy do opanowania.
     8: '#830000', // Pożar niemożliwy do opanowania.
+=======
+    0: '#C0C0C0', // Domyślnie brak koloru krawędzi.
+    1: '#00c21a', // Zagrożenie niskie.
+    2: '#73c205', // Zagrożenie umiarkowane.
+    3: '#efe309', // Zagrożenie wysokie.
+    4: '#f08808', // Zagrożenie bardzo wysokie.
+    5: '#af3a04', // Zagrożenie ekstremalne.
+    6: '#de0000', // Pożar łatwy do opanowania.
+    7: '#6c0000', // Pożar trudny, ale możliwy do opanowania.
+    8: '#4c0000', // Pożar niemożliwy do opanowania.
+>>>>>>> f0b11df (Integrated backend with front changes.)
     9: '#000000', // Sektor spalony.
 }
 
@@ -57,12 +69,19 @@ const Sector = (props) => {
         opacity: 0.6,
 =======
         borderWidth: '3px',
+<<<<<<< HEAD
         borderColor: `${forestStateToSectorBorderColorDict[sectorState]}`,
         opacity: 0.4,
 >>>>>>> a527e30 (przyciski Start, Stop, Reset działają teraz poprawnie, dodano suwak do regulacji szybkości symulacji)
         background: `${forestTypeToSectorColorDict[forestType]}`,
+=======
+        borderColor: `${forestTypeToSectorColorDict[forestType]}`,
+        opacity: 0.6,
+        background: `${props.didInit ? forestStateToSectorBorderColorDict[sectorState] : forestTypeToSectorColorDict[forestType]}`,
+>>>>>>> f0b11df (Integrated backend with front changes.)
         pointerEvents: `${props.didInit ? 'none' : 'all'}`,
     };
+
 
     // Obsługa kliknięcia
     const handleClick = () => {
