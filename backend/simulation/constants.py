@@ -35,9 +35,5 @@ K_FACTORS = {
 # Początkowa wartość PM2.5 [ug/m3].
 PM25_START_VALUE = 25
 
-<<<<<<< HEAD
-# TODO: uzupełnić stałe o słownik z zależnościami ryzyk oraz stopni zaawansowania pożaru od wartości PM2.5 i CO2.
-=======
 # Lista parametrów pogodowych, które zmieniają się podczas rozprzestrzeniania się pożaru.
 CHANGEABLE_PARAMETERS = ['temperature', 'air_humidity', 'litter_moisture', 'co2', 'pm25']
->>>>>>> f0b11df (Integrated backend with front changes.)

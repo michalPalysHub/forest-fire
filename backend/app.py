@@ -31,8 +31,6 @@ def simulation_run():
     return 'Simulation started.'
 
 
-<<<<<<< HEAD
-=======
 @app.route('/reset', methods=['POST'])
 def reset_data():
     simulation.reset()
@@ -52,7 +50,6 @@ def settings():
     return 'Simulation settings reconfigured.'
 
 
->>>>>>> f0b11df (Integrated backend with front changes.)
 @app.route('/sectors', methods=['GET'])
 def sectors_data():
     return simulation.get_sectors_data()

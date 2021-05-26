@@ -1,17 +1,9 @@
-<<<<<<< HEAD
-from random import randint, uniform
-from math import ceil
-
-from .agents import SensorAgent
-from .constants import COLUMNS, ROWS, CO2_START_VALUES, PM25_START_VALUE
-=======
 import random
 
 from math import ceil, log, exp, sqrt
 
 from .agents import SensorAgent
 from .constants import *
->>>>>>> f0b11df (Integrated backend with front changes.)
 
 
 class ForestArea:
@@ -19,21 +11,8 @@ class ForestArea:
     Symbolizuje las jako cały obszar. Zawiera informacje na temat struktury lasu, tj. rozkładu kwadratów
     reprezentujących sektor lasu oraz ułożenia czujników.
     """
-<<<<<<< HEAD
-    def __init__(self):
-=======
     def __init__(self, columns, rows, sector_size):
->>>>>>> f0b11df (Integrated backend with front changes.)
         """
-<<<<<<< HEAD
-        squares - słownik zawierający instancje sektorów lasu;
-        squares_data - słownik zawierający informacje na temat poszczególnych kwadratów lasu;
-        sensors - słownik zawierający instancje czujników.
-        """
-        self.squares = dict()
-        self.squares_data = dict()
-        self.sensors= dict()
-=======
         sectors - słownik zawierający instancje sektorów lasu;
         sensors - słownik zawierający instancje czujników;
         sectors_on_fire - słownik id kwadratów objętych pożarem na początku wraz z z stopniami zaawansowania.
@@ -45,7 +24,6 @@ class ForestArea:
         self.sectors = dict()
         self.sensors = dict()
         self.sectors_on_fire = list()
->>>>>>> 2732a73 (squares -> sectors)
 
         self.fire_initted = False
         self.whole_forest_burned = False
@@ -69,36 +47,12 @@ class ForestArea:
         Przygotowanie słownika z polem na dane dla każdego sektora planszy pod warunkiem, że został oznaczony jako las.
         """
         self.sectors = {int(uid): {} for uid in data if data[uid]['forestType'] != 0}
-        print(self.sectors)
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    def get_forest_data(self):
-=======
-    def init_fire(self, amount=3):
->>>>>>> 2732a73 (squares -> sectors)
-=======
     def init_fire(self, amount=5):
->>>>>>> f0b11df (Integrated backend with front changes.)
         """
-        Zwraca słownik squares_data z aktualnymi parametrami każdego sektora lasu.
+        Wywołanie pożaru na kilku sektorach lasu na początku symulacji, oraz aktualizacja na tej podstawie sektorów
+        sąsiednich. Docelowo sektory, na których będzie wywoływany pożar będą zaznaczane przez użytkownika.
         """
-<<<<<<< HEAD
-<<<<<<< HEAD
-        for square_id in self.squares:
-            square = self.squares[square_id]
-            self.squares_data[square_id] = square.get_square_data()
-
-        return self.squares_data
-=======
-        # self.sectors_on_fire = [random.choice(list(self.sectors.keys())) for _ in range(amount)]
-        self.sectors_on_fire = [82]
-        for sector_id in self.sectors_on_fire:
-            sector = self.sectors[sector_id]
-            sector.set_on_fire()
-            self.update_neighborhood(sector)
->>>>>>> 2732a73 (squares -> sectors)
-=======
         amount = random.randint(3, 6)
         self.sectors_on_fire = [random.choice(list(self.sectors.keys())) for _ in range(amount)]
         # self.sectors_on_fire = [54, 234, 345, 566, 735]
@@ -107,38 +61,26 @@ class ForestArea:
             sector.set_on_fire()
 
         self.fire_initted = True
->>>>>>> f0b11df (Integrated backend with front changes.)
 
-    def get_sensors(self):
+    def init_sensors(self):
         """
         Rozstawienie czujników na planszy. Czujniki są wstawiane od określonego przez ustalony sektor czujnika pola.
         Przykładowo dla rozmiaru sektoru równego 5 obszar obejmowany przez czujnik to 5x5 kwadratów. Zatem Początkowa
         pozycja czujnika to i=3, j=3.
         """
+        # tbh to bezsens, żeby tak to robić, do usuniecia pewnie
         sector_size = SensorAgent.SECTOR_SIZE
-        start_i = ceil(sector_size/2)-1
-        start_j = start_i
+        start = ceil(sector_size / 2) - 1
         uid = 0
 
-<<<<<<< HEAD
-        for i in range(start_i, ROWS, sector_size):
-            for j in range(start_j, COLUMNS, sector_size):
-=======
         for i in range(start, self.rows, sector_size):
             for j in range(start, self.columns, sector_size):
->>>>>>> f0b11df (Integrated backend with front changes.)
                 uid += 1
                 self.sensors[uid] = SensorAgent(uid, i, j)
 
         return self.sensors
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    def get_forest_data(self):
-=======
     def get_sectors_data(self):
->>>>>>> f0b11df (Integrated backend with front changes.)
         """
         Zwraca słownik sectors_data z aktualnymi parametrami każdego sektora lasu.
         """
@@ -157,8 +99,6 @@ class ForestArea:
         """
         center_data = center.get_changeable_weather_data()
 
-<<<<<<< HEAD
-=======
         if not self.fire_initted:
             sector_ids = self.sectors
         else:
@@ -186,7 +126,6 @@ class ForestArea:
 
         return neigbhor_ids
 
->>>>>>> f0b11df (Integrated backend with front changes.)
     @staticmethod
     def get_distance(i1, j1, i2, j2):
         """
@@ -254,12 +193,12 @@ class ForestArea:
         if len(self.sectors_on_fire) == 0:
             self.whole_forest_burned = True
 
->>>>>>> 2732a73 (squares -> sectors)
 
 class ForestSector:
     """
     Zawiera informacje na temat poszczególnych, niejmniejszych sektorów lasu.
     """
+
     def __init__(self, uid, i, j, forest_type):
         """
         Każdy sektor posiada atrybuty takie jak:
@@ -272,24 +211,19 @@ class ForestSector:
                 - 6:8 - stopień zaawansowania pożaru;
                 - 9 - spalony sektor.
         """
-        self.uid = uid
+        self.id = uid
         self.i = i
         self.j = j
         self.forest_type = forest_type
 
-        self.temperature = 28 + round(uniform(-2,2), 1) # Temperatura powietrza [°C].
-        self.air_humidity = 13 + round(uniform(-3,3), 1) # Wilgtoność powietrza [%].
-        self.litter_moisture = 8 + round(uniform(-3,3), 1) # Wilgotność ściółki [%].
-        self.wind_speed = 8 + round(uniform(-1,1), 1) # Prędkość wiatru  [km/h].
+        self.temperature = 28 + round(random.uniform(-2, 2), 1)  # Temperatura powietrza [°C].
+        self.air_humidity = 13 + round(random.uniform(-3, 3), 1)  # Wilgtoność powietrza [%].
+        self.litter_moisture = 16 + round(random.uniform(-3, 3), 1)  # Wilgotność ściółki [%].
+        self.wind_speed = 8 + round(random.uniform(-1, 1), 1)  # Prędkość wiatru  [km/h].
         self.wind_directory = 'NE'
-        self.co2_value = CO2_START_VALUES[self.forest_type] + round(uniform(-5,5), 1) # Wartość stężenia CO2 [ppm].
-        self.pm25_value = PM25_START_VALUE + round(uniform(-2, 2), 1) # Wartość stężenia PM2.5 [ug/m3].
+        self.co2 = CO2_START_VALUES[self.forest_type] + round(random.uniform(-5, 5), 1)  # Wartość stężenia CO2 [ppm].
+        self.pm25 = PM25_START_VALUE + round(random.uniform(-2, 2), 1)  # Wartość stężenia PM2.5 [ug/m3].
 
-<<<<<<< HEAD
-        self.square_state = randint(1,8)
-
-        self.square_data = dict()
-=======
         self.on_fire = False
         self.burned = False
         self.counter = 0
@@ -299,7 +233,6 @@ class ForestSector:
 
         self.neighbor_ids = list()
         self.data = dict()
->>>>>>> f0b11df (Integrated backend with front changes.)
 
         self.update_risk_info()
 
@@ -309,25 +242,24 @@ class ForestSector:
         """
         return f'({self.i},{self.j})'
 
-    def get_square_data(self):
+    def set_on_fire(self):
         """
-        Pozyskanie aktualnych parametrów danego sektoru.
+        Inicjacja pożaru na danym sektorze. Skutkuje to zmianą wartości parametrów pogodowych.
         """
-<<<<<<< HEAD
-        self.square_data = {'id': self.uid,
-                            'i': self.i,
-                            'j': self.j,
-                            'forest_type': self.forest_type,
-                            'temperature': self.temperature,
-                            'air_humidity': self.air_humidity,
-                            'litter_moisture': self.litter_moisture,
-                            'wind_speed': self.wind_speed,
-                            'wind_directory': self.wind_directory,
-                            'co2_value': self.co2_value,
-                            'pm25_value': self.pm25_value,
-                            'square_state': self.square_state,
-                            }
-=======
+        self.state = random.randint(6, 8)
+        self.on_fire = True
+
+        self.temperature = 30 + round(random.uniform(0, self.state ** 2 / 10), 1)
+        self.air_humidity = 5 + round(random.uniform(0, self.state ** 2 / 10), 1)
+        self.litter_moisture = 5 + round(random.uniform(0, self.state ** 2 / 10), 1)
+        self.co2 = 1.5 * CO2_START_VALUES[self.forest_type] + round(random.uniform((self.state - 1) ** 2 / 2,
+                                                                                   self.state ** 2 / 2), 1)
+        self.pm25 = round(random.uniform(self.state - 1, self.state) / 2 * PM25_START_VALUE, 1)
+
+    def get_data(self):
+        """
+        Pozyskanie wszystkich, aktualnych informacji na temat danego sektoru. Realizowane na potrzeby widoku API.
+        """
         self.data = {
             'i': self.i,
             'j': self.j,
@@ -343,24 +275,22 @@ class ForestSector:
             'ffdi': self.ffdi,
             'on_fire': self.on_fire
         }
->>>>>>> 2732a73 (squares -> sectors)
 
-        return self.square_data
+        return self.data
 
-    def update_square_data(self, **kwargs):
+    def get_changeable_weather_data(self):
+        """
+        Uzyskanie wartości parametrów pogodowych, które zmieniają się podczas pożaru.
+        """
+        data = self.get_data()
+        weather_data = {parameter: data[parameter] for parameter in data if parameter in CHANGEABLE_PARAMETERS}
+
+        return weather_data
+
+    def update_data(self, data):
         """
         Aktualizacja parametrów danego sektoru na skutek uruchomionej symulacji.
         """
-<<<<<<< HEAD
-        self.temperature = kwargs['temperature']
-        self.air_humidity = kwargs['humidity']
-        self.litter_moisture = kwargs['litter_moisture']
-        self.wind_speed = kwargs['wind_speed']
-        self.wind_directory = kwargs['wind_directory']
-        self.co2_value = kwargs['co2_value']
-        self.pm25_value = kwargs['pm25_value']
-        self.square_state = kwargs['square_state']
-=======
         self.temperature = data.get('temperature', self.temperature)
         self.air_humidity = data.get('air_humidity', self.air_humidity)
         self.litter_moisture = data.get('litter_moisture', self.litter_moisture)
@@ -398,5 +328,18 @@ class ForestSector:
         self.ffdi = round(
             self.k * 2 * exp(-0.45 + 0.987 * log(10 * (100 - self.litter_moisture) / 100) - 0.0345 *
                                   self.air_humidity + 0.0338 * self.temperature + 0.0234 * self.wind_speed), 2)
->>>>>>> f0b11df (Integrated backend with front changes.)
 
+    def update_state(self):
+        """
+        Wyznaczenie stanu pożarowego na danym sektorze, na podstawie współczynnika FFDI.
+        """
+        if self.ffdi < 5:
+            self.state = 1
+        elif 5 <= self.ffdi < 12:
+            self.state = 2
+        elif 12 <= self.ffdi < 24:
+            self.state = 3
+        elif 24 <= self.ffdi < 50:
+            self.state = 4
+        elif self.ffdi >= 50:
+            self.state = 5
