@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import random
 
 from math import ceil, sqrt, log, exp
@@ -90,7 +92,7 @@ class ForestArea:
 
         return sectors_data
 
-    def update_neighborhood(self, center) -> None:  # center: ForestSector
+    def update_neighborhood(self, center: ForestSector) -> None:
         """
         Aktualizacja parametrów pogodowych na podstawie zmian w sektorze 'center'. Z założenia funkcja ta ma służyć
         do uwzględnienia wpływu pożaru wewnątrz jednego sektora na cały las. Przykładowo, gdy na skutek pożaru
@@ -175,7 +177,7 @@ class ForestArea:
                 self.set_neighbors_on_fire(neighbor_id, sector)
         self.is_forest_on_fire()
 
-    def update_sector_due_fire(self, sector) -> None:  # sector: ForestSector
+    def update_sector_due_fire(self, sector: ForestSector) -> None:
         """
         Aktualizuje parametry danego sektoru na skutek trwającego pożaru. Uwzględnia także wpływ pożaru na sektory
         sąsiednie.
