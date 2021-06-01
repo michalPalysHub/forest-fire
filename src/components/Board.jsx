@@ -11,7 +11,7 @@ const Board = (props) => {
     const [sectorsData, setSectorsData] = useState({});
 
     // Globalnie ustawiony typ lasu
-    const [forestTypeGlobal, setForestTypeGlobal] = useState(0);
+    const [forestTypeGlobal, setForestTypeGlobal] = useState(1);
 
     // Pobranie danych inicjacyjnych z API - endpoint '/dimensions'.
     const boardDimensions = GetDataFromAPI('/dimensions')

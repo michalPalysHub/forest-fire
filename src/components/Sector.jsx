@@ -26,7 +26,7 @@ const Sector = (props) => {
     // Zmienne stanu reprezentujące współrzędne służące do identyfikacji danego kwadratu
     const [i, setRowIndex] = useState(props.i);
     const [j, setColumnIndex] = useState(props.j);
-    const [sectorState, setSectorState] = useState(props.sectorState);
+    const sectorState = props.sectorState;
 
     // Zmienna określająca typ lasu dla danego kwadratu
     const [forestType, setForestType] = useState(props.forestTypeGlobal);
