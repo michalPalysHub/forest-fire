@@ -101,7 +101,7 @@ const App = () => {
         <div className="main">
             <h1 className="centered"> Forest fire </h1>
             <Board onDataInit={onDataInit} didInit={didInit} simulationData={sectorsData}/>
-            <div className="centered" >
+            <div className="centered">
                 {buttonPanel}
             </div>
         </div>

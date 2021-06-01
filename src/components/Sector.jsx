@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 
 // Słownik umożliwiający reprezentację danego typu lasu określonym kolorem kwadratu
 const forestTypeToSectorColorDict = {
-    0: '#c0c0c0',         // brak
-    1: '#3fd54c',    // liściasty
-    2: '#2a9024',   // mieszany
-    3: '#1e491d',     // iglasty
+    0: '#c0c0c0', // brak
+    1: '#3fd54c', // liściasty
+    2: '#2a9024', // mieszany
+    3: '#1e491d', // iglasty
 };
 
 const forestStateToSectorBorderColorDict = {
@@ -26,16 +26,11 @@ const Sector = (props) => {
     // Zmienne stanu reprezentujące współrzędne służące do identyfikacji danego kwadratu
     const [i, setRowIndex] = useState(props.i);
     const [j, setColumnIndex] = useState(props.j);
-    const sectorState = props.sectorState
+    const [sectorState, setSectorState] = useState(props.sectorState);
 
     // Zmienna określająca typ lasu dla danego kwadratu
-    const [forestType, setForestType] = useState(_ => {
-        if (i < 5 && j < 5) {
-            return 1;
-        } else {
-            return 1;
-        }
-    })
+    const [forestType, setForestType] = useState(props.forestTypeGlobal);
+    //let forestType = props.forestTypeGlobal;
 
     // Informacje na temat stylu w CSS
     const sectorStyle = {
@@ -51,11 +46,11 @@ const Sector = (props) => {
         pointerEvents: `${props.didInit ? 'none' : 'all'}`,
     };
 
-
     // Obsługa kliknięcia
     const handleClick = () => {
         if (props.didInit === false){
-            setForestType((forestType + 1) % Object.keys(forestTypeToSectorColorDict).length)
+            setForestType((forestType + 1) % Object.keys(forestTypeToSectorColorDict).length);
+            //forestType = (forestType + 1) % Object.keys(forestTypeToSectorColorDict).length;
         }
     };
 
