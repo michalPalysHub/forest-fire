@@ -54,7 +54,6 @@ const Board = (props) => {
 
     // Inicjalizacja danych
     const handleInitClick = () => {
-        console.log(sectorsData)
         fetch('/init_data', {
             method: 'POST',
             cache: 'no-cache',
@@ -152,6 +151,7 @@ const Board = (props) => {
                             onSectorUpdate={onSectorUpdate}
                             didInit={props.didInit}
                             didSpecifyForestType={props.didSpecifyForestType}
+                            setSelectedSectorIndex={props.setSelectedSectorIndex}
                             key={i}
                         />
                     ))}

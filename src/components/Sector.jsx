@@ -46,7 +46,7 @@ const Sector = (props) => {
         borderColor: `${isFireSource ? 'red' : forestTypeToSectorColorDict[forestType]}`,
         opacity: 0.6,
         background: `${props.didInit ? forestStateToSectorBorderColorDict[sectorState] : forestTypeToSectorColorDict[forestType]}`,
-        pointerEvents: `${props.didInit ? 'none' : 'all'}`,
+        //pointerEvents: `${props.didInit ? 'none' : 'all'}`,
     };
 
     // Obsługa kliknięcia
@@ -56,6 +56,9 @@ const Sector = (props) => {
             //forestType = (forestType + 1) % Object.keys(forestTypeToSectorColorDict).length;
         } else if (props.didInit === false && props.didSpecifyForestType === true) {
             setIsFireSource(!isFireSource);
+        } else {
+            props.setSelectedSectorIndex(props.id);
+            console.log(props.id);
         }
     };
 

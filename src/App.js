@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Board from './components/Board'
 
 import Button from 'react-bootstrap/Button';
+import Jumbotron from 'react-bootstrap/Jumbotron';
+import Table from 'react-bootstrap/Table';
 import { RangeStepInput } from 'react-range-step-input';
 import './App.css';
+import { Container } from 'react-bootstrap';
 
 const App = () => {
     // Flaga informująca o tym, czy został określony obszar lasu oraz jego typ dla wszystkich sektorów
@@ -21,6 +24,9 @@ const App = () => {
     // JSON zawierający aktualne dane każdego z sektorów pochodzące z API
     const [sectorsData, setSectorsData] = useState({});
 
+    // Indeks sektora wybranego do podglądu parametrów 
+    const [selectedSectorIndex, setSelectedSectorIndex] = useState(-1);
+
     // Częstotliwość pobierania danych z /simulation, szybkość symulacji - zmieniana suwakiem
     const [timeout, setTimeout] = useState(750);
 
@@ -30,6 +36,7 @@ const App = () => {
             .then(response => response.json())
             .then(message => {
                 setSectorsData(message['sectors'])
+                console.log(sectorsData)
                 if (message['simulation_run'] === false) {
                     handleStopClick();
                 }
@@ -45,7 +52,6 @@ const App = () => {
     // Zmiana statusu inicjalizacji danych w API
     const onDataInit = () => {
         setDidInit(true);
-        getSimulationDataFromApi();
         postDataToAPI({ 'newLoopTime': timeout }, '/settings');
     }
 
@@ -87,14 +93,16 @@ const App = () => {
     }
 
     // Warunkowe wyświetlanie/ukrywanie odpowiednich przycisków
-    let buttonPanel, startStopSimBtn;
+    let buttonPanel, startStopSimBtn, statsPanel;
     if (didInit === true && didSpecifyForestType === true) {
         if (simulationRun) {
             startStopSimBtn = <Button variant="info" onClick={handleStopClick} style={{ marginRight: '2px' }}>Stop</Button>
         } else {
             startStopSimBtn = <Button variant="info" onClick={handleStartClick} style={{ marginRight: '2px' }}>Start</Button>
         }
-        buttonPanel = <div>
+
+        // Panel z przyciskami Start/Stop oraz Reset
+        buttonPanel = <div style={{ marginBottom: '5px' }}>
             {startStopSimBtn}
             <Button variant="info" onClick={handleResetClick}>Reset</Button>
             <p style={{ marginTop: '5px' }}>Prędkość symulacji: {timeout} [ms]</p>
@@ -105,22 +113,67 @@ const App = () => {
                 onChange={onTimeoutSliderChange}
             />
         </div>
+
+        // Panel ze statystykami dla wybranego sektora
+        let selectedSectorStats;
+        if (sectorsData[selectedSectorIndex] != null) {
+            selectedSectorStats = [
+                sectorsData[selectedSectorIndex].temperature,
+                sectorsData[selectedSectorIndex].air_humidity,
+                sectorsData[selectedSectorIndex].co2,
+                sectorsData[selectedSectorIndex].ffdi,
+                sectorsData[selectedSectorIndex].pm25,
+            ];
+        } else {
+            selectedSectorStats = ['-', '-', '-', '-', '-'];
+        }
+        statsPanel = <div>
+            <Jumbotron>
+                <Container>
+                    <h5>Dane dla wybranego sektora</h5>
+                    <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th>Parametr</th>
+                                <th>Wartość</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {selectedSectorStats.map((statVal, index) => <tr>
+                                <td>{sectorParametersNames[index]}</td>
+                                <td>{statVal}</td>
+                            </tr>)}
+                        </tbody>
+                    </Table>
+                </Container>
+            </Jumbotron>
+        </div>
     } else {
         buttonPanel = <div></div>
+        statsPanel = <div></div>
     }
 
     return (
         <div className="main">
             <h1 className="centered"> Forest fire </h1>
-            <Board simulationData={sectorsData}
+            <Board simulationData={sectorsData} setSelectedSectorIndex={setSelectedSectorIndex}
                 onForestTypeSpecification={onForestTypeSpecification} didSpecifyForestType={didSpecifyForestType}
                 onDataInit={onDataInit} didInit={didInit} />
             <div className="centered">
                 {buttonPanel}
+                {statsPanel}
             </div>
         </div>
     );
 };
+
+const sectorParametersNames = [
+    "Temperatura",
+    "Wilgotność powietrza",
+    "Stężenie CO2",
+    "FFDI",
+    "pm25",
+]
 
 const postDataToAPI = (message, endpoint) => {
     fetch(endpoint, {
