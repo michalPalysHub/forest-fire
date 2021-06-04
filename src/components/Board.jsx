@@ -30,17 +30,18 @@ const Board = (props) => {
     }
 
     // Funkcja wywoływana po każdej zmianie danego komponentu Sector
-    const onSectorUpdate = (id, i, j, forestType) => {
+    const onSectorUpdate = (id, i, j, forestType, isFireSource) => {
         let tmp = sectorsData;
         tmp[id] = {
             'i': i,
             'j': j,
             'forestType': forestType,
+            'isFireSource': isFireSource,
         }
         setSectorsData(tmp);
     }
 
-    // Funkcja zmieniająca obwódkę danego komponentu Sector w zależności od jego stanu
+    // Funkcja umożliwiająca pobranie informacji na temat stanu danego sektora
     const getSectorState = (id) => {
         if (props.simulationData) {
             if (id in props.simulationData) {
@@ -53,6 +54,7 @@ const Board = (props) => {
 
     // Inicjalizacja danych
     const handleInitClick = () => {
+        console.log(sectorsData)
         fetch('/init_data', {
             method: 'POST',
             cache: 'no-cache',
@@ -89,14 +91,22 @@ const Board = (props) => {
 
     // Warunkowe wyświetlanie/ukrywanie odpowiednich przycisków
     let controlsPanel;
-    if (props.didInit === true) {
+
+    if (props.didInit === true && props.didSpecifyForestType === true) {
         controlsPanel = <div></div>;
-    } else {
+    } else if (props.didInit === false && props.didSpecifyForestType === true) {
         controlsPanel = <div className="centered" style={{
             display: 'flex',
             justifyContent: 'center',
         }}>
             <Button variant="info" onClick={handleInitClick} style={{ marginRight: '10px' }}>Inicjuj</Button>
+        </div>;
+    } else {
+        controlsPanel = <div className="centered" style={{
+            display: 'flex',
+            justifyContent: 'center',
+        }}>
+            <Button variant="info" onClick={props.onForestTypeSpecification} style={{ marginRight: '10px' }}>Zapisz typ lasu</Button>
             <div style={{
                 borderLeft: '3px solid black',
                 height: '38px',
@@ -141,6 +151,7 @@ const Board = (props) => {
                             sectorState={getSectorState(i)}
                             onSectorUpdate={onSectorUpdate}
                             didInit={props.didInit}
+                            didSpecifyForestType={props.didSpecifyForestType}
                             key={i}
                         />
                     ))}

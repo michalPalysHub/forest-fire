@@ -28,19 +28,22 @@ const Sector = (props) => {
     const [j, setColumnIndex] = useState(props.j);
     const sectorState = props.sectorState;
 
-    // Zmienna określająca typ lasu dla danego kwadratu
+    // Zmienna określająca typ lasu dla danego sektora
     const [forestType, setForestType] = useState(props.forestTypeGlobal);
     //let forestType = props.forestTypeGlobal;
+
+    // Zmienna określająca, czy dany sektor jest źródłem (ogniskiem) pożaru
+    const [isFireSource, setIsFireSource] = useState(false);
 
     // Informacje na temat stylu w CSS
     const sectorStyle = {
         outline: 'none',
         height: `${props.size}px`,
         width: `${props.size}px`,
-        float: 'left', // kolejne kwadraty nie rozszerzają kontenera, ustawiają się poniżej
+        float: 'left',
         borderRadius: '1px',
         borderWidth: '3px',
-        borderColor: `${forestTypeToSectorColorDict[forestType]}`,
+        borderColor: `${isFireSource ? 'red' : forestTypeToSectorColorDict[forestType]}`,
         opacity: 0.6,
         background: `${props.didInit ? forestStateToSectorBorderColorDict[sectorState] : forestTypeToSectorColorDict[forestType]}`,
         pointerEvents: `${props.didInit ? 'none' : 'all'}`,
@@ -48,15 +51,17 @@ const Sector = (props) => {
 
     // Obsługa kliknięcia
     const handleClick = () => {
-        if (props.didInit === false){
+        if (props.didInit === false && props.didSpecifyForestType === false) {
             setForestType((forestType + 1) % Object.keys(forestTypeToSectorColorDict).length);
             //forestType = (forestType + 1) % Object.keys(forestTypeToSectorColorDict).length;
+        } else if (props.didInit === false && props.didSpecifyForestType === true) {
+            setIsFireSource(!isFireSource);
         }
     };
 
     // Funkcja wywołania po każdym renderowaniu komponentu (po każdej jego zmianie)
     useEffect(() => {
-        props.onSectorUpdate(props.id, i, j, forestType)
+        props.onSectorUpdate(props.id, i, j, forestType, isFireSource)
     });
 
     // Zwracany kod HTML
