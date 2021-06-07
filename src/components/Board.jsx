@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Sector from './Sector.jsx'
 
 import Button from 'react-bootstrap/Button';
@@ -11,7 +11,8 @@ const Board = (props) => {
     const [sectorsData, setSectorsData] = useState({});
 
     // Globalnie ustawiony typ lasu
-    const [forestTypeGlobal, setForestTypeGlobal] = useState(1);
+    const forestTypeGlobalRef = useRef();
+    const [forestTypeGlobal, setForestTypeGlobal] = useState(2);
 
     // Pobranie danych inicjacyjnych z API - endpoint '/dimensions'.
     const boardDimensions = GetDataFromAPI('/dimensions')
@@ -27,6 +28,13 @@ const Board = (props) => {
             const elementCoords = [i, j]
             matrixElementsCoords.push(elementCoords)
         }
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const data = forestTypeGlobalRef.current.value;
+        alert(data);
+        setForestTypeGlobal(data);
     }
 
     // Funkcja wywoływana po każdej zmianie danego komponentu Sector
@@ -111,20 +119,15 @@ const Board = (props) => {
                 height: '38px',
                 marginRight: '10px',
             }}></div>
-            <DropdownButton variant="info" title="Ustaw typ lasu globalnie">
-                <Dropdown.Item as="button" onClick={setForestTypeToNoneGlobally}>
-                    Brak
-                </Dropdown.Item>
-                <Dropdown.Item as="button" onClick={setForestTypeToDeciduousGlobally}>
-                    Liściasty
-                </Dropdown.Item>
-                <Dropdown.Item as="button" onClick={setForestTypeToMixedGlobally}>
-                    Mieszany
-                </Dropdown.Item>
-                <Dropdown.Item as="button" onClick={setForestTypeToConiferousGlobally}>
-                    Iglasty
-                </Dropdown.Item>
-            </DropdownButton>
+            <form onSubmit={handleSubmit}>
+                <select ref={forestTypeGlobalRef}>
+                    <option value={0}>brak</option>
+                    <option value={1}>liściasty</option>
+                    <option value={2}>mieszany</option>
+                    <option value={3}>iglasty</option>
+                </select>
+                <button type='submit'>zatwierdź</button>
+            </form>
         </div>;
     }
 
