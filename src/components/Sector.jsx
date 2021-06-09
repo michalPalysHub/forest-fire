@@ -29,8 +29,17 @@ const Sector = (props) => {
     const sectorState = props.sectorState;
 
     // Zmienna określająca typ lasu dla danego sektora
-    const [forestType, setForestType] = useState(props.forestTypeGlobal);
-    //let forestType = props.forestTypeGlobal;
+    // const [forestType, setForestType] = useState(props.forestTypeGlobal);
+    // //let forestType = props.forestTypeGlobal;
+    const [forestType, setForestType] = useState(_ => {
+        if (i < 5 && j < 5) {
+            return 1;
+        } else if ( i === 10 && j === 28) {
+            return 0;
+        } else {
+            return 1;
+        }
+    })
 
     // Zmienna określająca, czy dany sektor jest źródłem (ogniskiem) pożaru
     const [isFireSource, setIsFireSource] = useState(false);

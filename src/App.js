@@ -53,6 +53,7 @@ const App = () => {
     const onDataInit = () => {
         setDidInit(true);
         postDataToAPI({ 'newLoopTime': timeout }, '/settings');
+        getSimulationDataFromApi();
     }
 
     // Uruchomienie symulacji
@@ -118,14 +119,21 @@ const App = () => {
         let selectedSectorStats;
         if (sectorsData[selectedSectorIndex] != null) {
             selectedSectorStats = [
+                selectedSectorIndex,
+                sectorsData[selectedSectorIndex].i,
+                sectorsData[selectedSectorIndex].j,
                 sectorsData[selectedSectorIndex].temperature,
                 sectorsData[selectedSectorIndex].air_humidity,
+                sectorsData[selectedSectorIndex].litter_moisture,
                 sectorsData[selectedSectorIndex].co2,
-                sectorsData[selectedSectorIndex].ffdi,
                 sectorsData[selectedSectorIndex].pm25,
+                sectorsData[selectedSectorIndex].wind_directory,
+                sectorsData[selectedSectorIndex].wind_speed,
+                sectorsData[selectedSectorIndex].ffdi,
+                sectorsData[selectedSectorIndex].sector_state,
             ];
         } else {
-            selectedSectorStats = ['-', '-', '-', '-', '-'];
+            selectedSectorStats = ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'];
         }
         statsPanel = <div>
             <Jumbotron>
@@ -168,11 +176,18 @@ const App = () => {
 };
 
 const sectorParametersNames = [
-    "Temperatura",
-    "Wilgotność powietrza",
-    "Stężenie CO2",
+    "Identyfikator sektora",
+    "Wiersz",
+    "Kolumna",
+    "Temperatura [°C]",
+    "Wilgotność powietrza [%]",
+    "Wilgotność ściółki [%]",
+    "Stężenie CO2 [ppm]",
+    "Stężenie PM2,5 [ug/m3]",
+    "Kierunek wiatru",
+    "Prędkość wiatru [km/h]",
     "FFDI",
-    "pm25",
+    "Stan sektora"
 ]
 
 const postDataToAPI = (message, endpoint) => {
