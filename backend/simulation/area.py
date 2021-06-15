@@ -5,7 +5,7 @@ import random
 from math import ceil, sqrt, log, exp, pi
 
 from .agents import Sensor
-from .constants import CO2_START_VALUES, PM25_START_VALUE, K_FACTORS, CHANGEABLE_PARAMETERS
+from .constants import CO2_START_VALUES, PM25_START_VALUE, K_FACTORS, CHANGEABLE_PARAMETERS, WIND_DIRECTIONS
 
 
 class ForestArea:
@@ -175,12 +175,43 @@ class ForestArea:
         neighbor = self.sectors[uid]
         if not (neighbor.on_fire or neighbor.burned):
             if neighbor.id not in self.firefighters_locations:
-                prob = float(neighbor.ffdi / 100)
+                prob = self.get_spread_probability(sector_on_fire, neighbor)
                 if random.random() <= prob:
                     self.sectors_on_fire.append(uid)
                     neighbor.on_fire = True
                     neighbor.state = random.randint(6, sector_on_fire.state)
                     self.update_neighborhood(neighbor)
+
+    def get_spread_probability(self, sector_on_fire, neighbor):
+        divider = 2500
+        prob = float(neighbor.ffdi/divider)
+        wind_direction = sector_on_fire.wind_direction
+        diff_horizontal = sector_on_fire.j - neighbor.j
+        diff_vertical = sector_on_fire.i - neighbor.i
+
+        if diff_horizontal > 0:
+            if wind_direction == 'W':
+                prob += float(neighbor.wind_speed/divider)
+            elif wind_direction in ['SW', 'NW']:
+                prob += float(neighbor.wind_speed/2*divider)
+        elif diff_horizontal < 0:
+            if wind_direction == 'E':
+                prob += float(neighbor.wind_speed/divider)
+            elif wind_direction in ['SE', 'NE']:
+                prob += float(neighbor.wind_speed/2*divider)
+
+        if diff_vertical > 0:
+            if wind_direction == 'N':
+                prob += float(neighbor.wind_speed/divider)
+            elif wind_direction in ['NE', 'NW']:
+                prob += float(neighbor.wind_speed/2*divider)
+        elif diff_vertical < 0:
+            if wind_direction == 'S':
+                prob += float(neighbor.wind_speed/divider)
+            elif wind_direction in ['SE', 'SW']:
+                prob += float(neighbor.wind_speed/2*divider)
+
+        return prob
 
     def is_forest_on_fire(self) -> None:
         """
@@ -231,7 +262,7 @@ class ForestSector:
         # Prędkość wiatru [km/h].
         self.wind_speed = 8 + round(random.uniform(-1, 1), 1)
         # Kierunek wiatru.
-        self.wind_directory = 'NE'
+        self.wind_direction = random.choice(WIND_DIRECTIONS)
         # Wartość stężenia CO2 [ppm].
         self.co2 = CO2_START_VALUES[self.forest_type] + round(random.uniform(-5, 5), 1)
         # Wartość stężenia PM2.5 [ug/m3].
@@ -240,11 +271,12 @@ class ForestSector:
         self.fuel = 1000
         self.on_fire = False
         self.burned = False
+        self.can_spread = False
+        self.firefighter_present = False
         self.counter = 0
         self.ffdi = float()
         self.k = K_FACTORS[self.forest_type]
         self.state = int()
-        self.can_spread = False
 
         self.neighbor_ids = list()
         self.data = dict()
@@ -286,7 +318,7 @@ class ForestSector:
             'air_humidity': round(self.air_humidity, 2),
             'litter_moisture': round(self.litter_moisture, 2),
             'wind_speed': round(self.wind_speed, 1),
-            'wind_directory': self.wind_directory,
+            'wind_directory': self.wind_direction,
             'co2': round(self.co2, 1),
             'pm25': round(self.pm25, 1),
             'sector_state': self.state,
@@ -313,7 +345,7 @@ class ForestSector:
         self.air_humidity = data.get('air_humidity', self.air_humidity)
         self.litter_moisture = data.get('litter_moisture', self.litter_moisture)
         self.wind_speed = data.get('wind_speed', self.wind_speed)
-        self.wind_directory = data.get('wind_directory', self.wind_directory)
+        self.wind_direction = data.get('wind_directory', self.wind_direction)
         self.co2 = data.get('co2', self.co2)
         self.pm25 = data.get('pm25', self.pm25)
         self.update_risk_info()
@@ -329,12 +361,12 @@ class ForestSector:
         self.air_humidity = self.air_humidity - 1 / self.state if self.air_humidity > 2 else 2 - 0.5 * random.random()
         self.litter_moisture = self.litter_moisture - 1 / self.state if self.litter_moisture > 2 \
             else 2 - 0.5 * random.random()
-        self.co2 += 10 * self.state
-        self.pm25 += self.state
+        self.co2 = self.co2 + 10 * self.state if self.co2 < 8000 else 8000 + 50 * random.random()
+        self.pm25 = self.pm25 + self.state if self.pm25 < 500 else 500 + 10 * random.random()
         self.update_risk_info()
 
     def reduce_fuel(self):
-        self.fuel -= self.ffdi * self.state / 12
+        self.fuel -= self.ffdi * self.state / 20
 
     def update_risk_info(self) -> None:
         """
@@ -370,7 +402,7 @@ class ForestSector:
             self.state = 5
 
     def update_state_due_fire(self) -> None:
-        if self.fuel <= 800:
+        if self.fuel <= 800 and not self.firefighter_present:
             self.can_spread = True
 
         if self.state == 6 and self.fuel <= 600:

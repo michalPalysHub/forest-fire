@@ -105,7 +105,7 @@ class Simulation:
             # Nadzorca wysyła straż pożarną na miejsca pożarów.
             self.firefighters = self.overseer.call_firefighters(self.analyst.on_fire_diff)
 
-            # # Strażacy poruszają się w stronę ogniska pożaru gasząc ewentualne ogniska pożarów po drodze.
+            # Strażacy poruszają się w stronę ogniska pożaru gasząc ewentualne ogniska pożarów po drodze.
             for firefighter in self.firefighters.values():
                 firefighter.move()
 

@@ -111,17 +111,19 @@ class Firefighter:
         for neighbor_id in self.sector.neighbor_ids:
             self.forest_area.sectors[neighbor_id].can_spread = False
 
+
         Firefighter.locations[self.id] = self.sector_id
 
     def fight_fire(self) -> None:
-        # self.sector.fuel += 100
-        # if self.sector.fuel >= 1000:
-        self.sector.fuel = 1000
-        self.sector.on_fire = False
-        self.sector.state = 5
-        self.sector.can_spread = False
-        self.forest_area.sectors_on_fire.remove(self.sector_id)
-        self.get_new_order()
+        self.sector.firefighter_present = True
+        self.sector.fuel += 100
+        if self.sector.fuel >= 1000:
+            self.sector.fuel = 1000
+            self.sector.on_fire = False
+            self.sector.state = 5
+            self.sector.can_spread = False
+            self.forest_area.sectors_on_fire.remove(self.sector_id)
+            self.get_new_order()
 
     def get_new_order(self) -> None:
         if self.forest_area.forest_on_fire:

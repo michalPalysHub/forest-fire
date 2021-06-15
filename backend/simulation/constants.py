@@ -1,14 +1,14 @@
 # Kierunki wiatru, tak o wypisane.
-WIND_DIRECTORIES = {
-    1: 'N',
-    2: 'NE',
-    3: 'E',
-    4: 'SE',
-    5: 'S',
-    6: 'SW',
-    7: 'W',
-    8: 'NW'
-}
+WIND_DIRECTIONS = (
+    'N',
+    'NE',
+    'E',
+    'SE',
+    'S',
+    'SW',
+    'W',
+    'NW'
+)
 
 # Typy lasu - tak jak wyżej.
 FOREST_TYPES = {
@@ -36,4 +36,4 @@ K_FACTORS = {
 PM25_START_VALUE = 25
 
 # Lista parametrów pogodowych, które zmieniają się podczas rozprzestrzeniania się pożaru.
-CHANGEABLE_PARAMETERS = ['temperature', 'air_humidity', 'litter_moisture', 'co2', 'pm25']
+CHANGEABLE_PARAMETERS = ('temperature', 'air_humidity', 'litter_moisture', 'co2', 'pm25')

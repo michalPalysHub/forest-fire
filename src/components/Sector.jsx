@@ -21,28 +21,53 @@ const forestStateToSectorBorderColorDict = {
     9: '#000000', // Sektor spalony.
 }
 
+const fireStationColor = '#0028a7';
+
 // Słownik umożliwiający reprezentację stanu zagrożenia pożarem lub jego zaawansowania dla danego sektora.
 const Sector = (props) => {
     // Zmienne stanu reprezentujące współrzędne służące do identyfikacji danego kwadratu
     const [i, setRowIndex] = useState(props.i);
     const [j, setColumnIndex] = useState(props.j);
+    const [fireStation, setFireStation] = useState(false);
     const sectorState = props.sectorState;
 
-    // Zmienna określająca typ lasu dla danego sektora
-    // const [forestType, setForestType] = useState(props.forestTypeGlobal);
-    // //let forestType = props.forestTypeGlobal;
-    const [forestType, setForestType] = useState(_ => {
-        if (i < 5 && j < 5) {
-            return 1;
-        } else if ( i === 10 && j === 28) {
-            return 0;
-        } else {
-            return 1;
+    // Współrzędne remizy strażackiej.
+    const fireStationCoords = {'i': 10, 'j': 28}
+
+    // Oznaczenie flagą sektora, na którym znajduje się remiza straży pożarnej.
+    if (i === fireStationCoords['i'] && j === fireStationCoords['j']) {
+        if (!fireStation) {
+            setFireStation(true);
         }
-    })
+    }
+
+    // Zmienna określająca typ lasu dla danego sektora
+    const [forestType, setForestType] = useState(props.forestTypeGlobal);
 
     // Zmienna określająca, czy dany sektor jest źródłem (ogniskiem) pożaru
     const [isFireSource, setIsFireSource] = useState(false);
+
+    const updateForestTypeGlobal = () => {
+        if (forestType !== props.forestTypeGlobal) {
+            setForestType(props.forestTypeGlobal);
+        }
+    }
+
+    // Funkcja zwracająca kolor sektora.
+    const getBackgroundColor = () => {
+        if (fireStation) {
+            return fireStationColor;
+        }
+        return props.didInit ? forestStateToSectorBorderColorDict[sectorState] : forestTypeToSectorColorDict[forestType];
+    }
+
+    // Funkcja zwracająca kolor granicy sektora.
+    const getBorderColor = () => {
+        if (fireStation) {
+            return fireStationColor;
+        }
+        return isFireSource ? 'red' : forestTypeToSectorColorDict[forestType];
+    }
 
     // Informacje na temat stylu w CSS
     const sectorStyle = {
@@ -52,28 +77,30 @@ const Sector = (props) => {
         float: 'left',
         borderRadius: '1px',
         borderWidth: '3px',
-        borderColor: `${isFireSource ? 'red' : forestTypeToSectorColorDict[forestType]}`,
+        borderColor: `${getBorderColor()}`,
         opacity: 0.6,
-        background: `${props.didInit ? forestStateToSectorBorderColorDict[sectorState] : forestTypeToSectorColorDict[forestType]}`,
+        background: `${getBackgroundColor()}`,
         //pointerEvents: `${props.didInit ? 'none' : 'all'}`,
     };
 
     // Obsługa kliknięcia
     const handleClick = () => {
-        if (props.didInit === false && props.didSpecifyForestType === false) {
+        if (props.didInit === false && props.didSpecifyForestType === false && !fireStation) {
             setForestType((forestType + 1) % Object.keys(forestTypeToSectorColorDict).length);
             //forestType = (forestType + 1) % Object.keys(forestTypeToSectorColorDict).length;
-        } else if (props.didInit === false && props.didSpecifyForestType === true) {
+        } else if (props.didInit === false && props.didSpecifyForestType === true && !fireStation) {
             setIsFireSource(!isFireSource);
         } else {
             props.setSelectedSectorIndex(props.id);
-            console.log(props.id);
         }
     };
 
     // Funkcja wywołania po każdym renderowaniu komponentu (po każdej jego zmianie)
     useEffect(() => {
         props.onSectorUpdate(props.id, i, j, forestType, isFireSource)
+        if (props.updateForestTypeGlobal) {
+            updateForestTypeGlobal();
+        }
     });
 
     // Zwracany kod HTML

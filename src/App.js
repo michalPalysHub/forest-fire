@@ -36,7 +36,6 @@ const App = () => {
             .then(response => response.json())
             .then(message => {
                 setSectorsData(message['sectors'])
-                console.log(sectorsData)
                 if (message['simulation_run'] === false) {
                     handleStopClick();
                 }
@@ -97,9 +96,9 @@ const App = () => {
     let buttonPanel, startStopSimBtn, statsPanel;
     if (didInit === true && didSpecifyForestType === true) {
         if (simulationRun) {
-            startStopSimBtn = <Button variant="info" onClick={handleStopClick} style={{ marginRight: '2px' }}>Stop</Button>
+            startStopSimBtn = <Button variant="info" onClick={handleStopClick} style={{ marginRight: '10px' }}>Stop</Button>
         } else {
-            startStopSimBtn = <Button variant="info" onClick={handleStartClick} style={{ marginRight: '2px' }}>Start</Button>
+            startStopSimBtn = <Button variant="info" onClick={handleStartClick} style={{ marginRight: '10px' }}>Start</Button>
         }
 
         // Panel z przyciskami Start/Stop oraz Reset

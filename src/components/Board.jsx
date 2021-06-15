@@ -6,12 +6,16 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import '../App.css';
 
+
 const Board = (props) => {
     // JSON zawierający dane i, j, forestType dla wszystkich komponentów
     const [sectorsData, setSectorsData] = useState({});
 
     // Globalnie ustawiony typ lasu
     const [forestTypeGlobal, setForestTypeGlobal] = useState(1);
+
+    // Flaga oznaczająca, czy stan lasu powinien zostać zaktualizowany globalnie.
+    const [updateForestTypeGlobal, setUpdateForestTypeGlobal] = useState(false);
 
     // Pobranie danych inicjacyjnych z API - endpoint '/dimensions'.
     const boardDimensions = GetDataFromAPI('/dimensions')
@@ -39,6 +43,9 @@ const Board = (props) => {
             'isFireSource': isFireSource,
         }
         setSectorsData(tmp);
+        if (updateForestTypeGlobal) {
+            setUpdateForestTypeGlobal(false);
+        }
     }
 
     // Funkcja umożliwiająca pobranie informacji na temat stanu danego sektora
@@ -71,21 +78,25 @@ const Board = (props) => {
     // Funkcje umożliwiająca zmianę typu lasu dla wszystkich sektorów na brak
     const setForestTypeToNoneGlobally = () => {
         setForestTypeGlobal(0);
+        setUpdateForestTypeGlobal(true);
     }
 
     // Funkcje umożliwiająca zmianę typu lasu dla wszystkich sektorów na liściasty
     const setForestTypeToDeciduousGlobally = () => {
         setForestTypeGlobal(1);
+        setUpdateForestTypeGlobal(true);
     }
 
     // Funkcje umożliwiająca zmianę typu lasu dla wszystkich sektorów na mieszany
     const setForestTypeToMixedGlobally = () => {
         setForestTypeGlobal(2);
+        setUpdateForestTypeGlobal(true);
     }
 
     // Funkcje umożliwiająca zmianę typu lasu dla wszystkich sektorów na iglasty
     const setForestTypeToConiferousGlobally = () => {
         setForestTypeGlobal(3);
+        setUpdateForestTypeGlobal(true);
     }
 
     // Warunkowe wyświetlanie/ukrywanie odpowiednich przycisków
@@ -107,9 +118,7 @@ const Board = (props) => {
         }}>
             <Button variant="info" onClick={props.onForestTypeSpecification} style={{ marginRight: '10px' }}>Zapisz typ lasu</Button>
             <div style={{
-                borderLeft: '3px solid black',
                 height: '38px',
-                marginRight: '10px',
             }}></div>
             <DropdownButton variant="info" title="Ustaw typ lasu globalnie">
                 <Dropdown.Item as="button" onClick={setForestTypeToNoneGlobally}>
@@ -143,16 +152,17 @@ const Board = (props) => {
                 }>
                     {matrixElementsCoords.map((coords, i) => (
                         <Sector size={sectorSize}
-                            id={i}
-                            i={coords[0]}
-                            j={coords[1]}
-                            forestTypeGlobal={forestTypeGlobal}
-                            sectorState={getSectorState(i)}
-                            onSectorUpdate={onSectorUpdate}
-                            didInit={props.didInit}
-                            didSpecifyForestType={props.didSpecifyForestType}
-                            setSelectedSectorIndex={props.setSelectedSectorIndex}
-                            key={i}
+                                id={i}
+                                i={coords[0]}
+                                j={coords[1]}
+                                forestTypeGlobal={forestTypeGlobal}
+                                sectorState={getSectorState(i)}
+                                onSectorUpdate={onSectorUpdate}
+                                updateForestTypeGlobal={updateForestTypeGlobal}
+                                didInit={props.didInit}
+                                didSpecifyForestType={props.didSpecifyForestType}
+                                setSelectedSectorIndex={props.setSelectedSectorIndex}
+                                key={i}
                         />
                     ))}
                 </div>
