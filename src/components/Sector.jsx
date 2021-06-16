@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Popup from './Popup';
 
 // Słownik umożliwiający reprezentację danego typu lasu określonym kolorem kwadratu
 const forestTypeToSectorColorDict = {
@@ -39,6 +40,12 @@ const Sector = (props) => {
         if (!fireStation) {
             setFireStation(true);
         }
+    }
+
+    const [isOpen, setIsOpen] = useState(false);
+
+    const togglePopup = () => {
+        setIsOpen(!isOpen);
     }
 
     // Zmienna określająca typ lasu dla danego sektora
@@ -85,13 +92,17 @@ const Sector = (props) => {
 
     // Obsługa kliknięcia
     const handleClick = () => {
-        if (props.didInit === false && props.didSpecifyForestType === false && !fireStation) {
-            setForestType((forestType + 1) % Object.keys(forestTypeToSectorColorDict).length);
-            //forestType = (forestType + 1) % Object.keys(forestTypeToSectorColorDict).length;
-        } else if (props.didInit === false && props.didSpecifyForestType === true && !fireStation) {
-            setIsFireSource(!isFireSource);
-        } else {
+        if (fireStation) {
             props.setSelectedSectorIndex(props.id);
+            togglePopup();
+        } else {
+            if (props.didInit === false && props.didSpecifyForestType === false) {
+                setForestType((forestType + 1) % Object.keys(forestTypeToSectorColorDict).length);
+            } else if (props.didInit === false && props.didSpecifyForestType === true) {
+                setIsFireSource(!isFireSource);
+            } else {
+                props.setSelectedSectorIndex(props.id);
+            }
         }
     };
 
@@ -104,9 +115,15 @@ const Sector = (props) => {
     });
 
     // Zwracany kod HTML
-    return <button style={sectorStyle}
-        onClick={handleClick}
-    />
+    return <div>
+        <button style={sectorStyle}
+                onClick={handleClick}
+        />
+        {isOpen && <Popup
+            handleClose={togglePopup}
+            postDataToAPI={props.postDataToAPI}
+        />}
+    </div>
 };
 
 export default Sector;

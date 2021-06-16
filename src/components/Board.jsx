@@ -48,6 +48,7 @@ const Board = (props) => {
         }
     }
 
+
     // Funkcja umożliwiająca pobranie informacji na temat stanu danego sektora
     const getSectorState = (id) => {
         if (props.simulationData) {
@@ -162,6 +163,7 @@ const Board = (props) => {
                                 didInit={props.didInit}
                                 didSpecifyForestType={props.didSpecifyForestType}
                                 setSelectedSectorIndex={props.setSelectedSectorIndex}
+                                postDataToAPI={props.postDataToAPI}
                                 key={i}
                         />
                     ))}

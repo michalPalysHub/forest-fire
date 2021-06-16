@@ -69,7 +69,6 @@ class Patrol:
 class Firefighter:
 
     move_speed = 1
-    limit = 5
     locations = dict()
 
     def __init__(self, forest_area, uid: int, order_sector_id: int, order_i: int, order_j: int) -> None:
@@ -111,7 +110,6 @@ class Firefighter:
         for neighbor_id in self.sector.neighbor_ids:
             self.forest_area.sectors[neighbor_id].can_spread = False
 
-
         Firefighter.locations[self.id] = self.sector_id
 
     def fight_fire(self) -> None:
@@ -145,3 +143,7 @@ class Firefighter:
                 uid = sector.id
 
         return uid
+
+    @classmethod
+    def set_limit(cls, number):
+        Firefighter.limit = number

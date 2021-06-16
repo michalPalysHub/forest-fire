@@ -77,6 +77,7 @@ const App = () => {
         setTimeout(750);
         clearInterval(timer);
         postDataToAPI('Data reset', '/reset');
+        postDataToAPI({ 'firefighters_limit': 5 }, '/settings');
         for (var id = 0; id < Object.keys(sectorsData).length; id++) {
             if (sectorsData[id] != null) {
                 sectorsData[id].sector_state = 0;
@@ -163,9 +164,15 @@ const App = () => {
     return (
         <div className="main">
             <h1 className="centered"> Forest fire </h1>
-            <Board simulationData={sectorsData} setSelectedSectorIndex={setSelectedSectorIndex}
-                onForestTypeSpecification={onForestTypeSpecification} didSpecifyForestType={didSpecifyForestType}
-                onDataInit={onDataInit} didInit={didInit} />
+            <Board
+                simulationData={sectorsData}
+                setSelectedSectorIndex={setSelectedSectorIndex}
+                onForestTypeSpecification={onForestTypeSpecification}
+                didSpecifyForestType={didSpecifyForestType}
+                onDataInit={onDataInit}
+                didInit={didInit}
+                postDataToAPI = {postDataToAPI}
+            />
             <div className="centered">
                 {buttonPanel}
                 {statsPanel}
