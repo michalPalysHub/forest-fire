@@ -38,10 +38,10 @@ class Simulation:
         # Limit dostępnych wozów strażackich.
         self.firefighters_limit = 5
         Firefighter.set_limit(self.firefighters_limit)
-        Firefighter.locations = dict()
 
         # Strażacy w liście.
         self.firefighters = list()
+        Firefighter.locations = dict()
 
         # Flaga informująca o statusie uruchomienia symulacji.
         self.simulation_run = False

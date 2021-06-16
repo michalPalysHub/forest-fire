@@ -75,7 +75,7 @@ class Firefighter:
         self.forest_area = forest_area
         self.id = uid
         self.sector_id = 428
-        self.sector = 'ForestSector'
+        self.sector = self.forest_area.sectors[self.sector_id]
         self.i = 10
         self.j = 28
         self.order_sector_id = order_sector_id
