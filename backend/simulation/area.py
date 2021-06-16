@@ -241,7 +241,6 @@ class ForestSector:
     """
     Zawiera informacje na temat poszczególnych, niejmniejszych sektorów lasu.
     """
-
     def __init__(self, uid: int, i: int, j: int, forest_type: int, is_fire_source: bool) -> None:
         """
         Inicjalizacja sektora lasu. Deklaruje informacje o położeniu, typie lasu, warunkach pogodowych, flagi

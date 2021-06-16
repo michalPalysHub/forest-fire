@@ -35,8 +35,13 @@ class Simulation:
         self.sensors = dict()
         self.sectors_data = dict()
 
+        # Limit dostępnych wozów strażackich.
+        self.firefighters_limit = 5
+        Firefighter.set_limit(self.firefighters_limit)
+
         # Strażacy w liście.
         self.firefighters = list()
+        Firefighter.locations = dict()
 
         # Flaga informująca o statusie uruchomienia symulacji.
         self.simulation_run = False
@@ -49,6 +54,10 @@ class Simulation:
         self.columns = settings.get('columns', self.columns)
         self.rows = settings.get('rows', self.rows)
         self.sector_size = settings.get('sector_size', self.sector_size)
+
+        # Ilość dostępnych wozów strażackich.
+        self.firefighters_limit = int(settings.get('firefighters_limit', self.firefighters_limit))
+        Firefighter.set_limit(self.firefighters_limit)
 
         # Minimalny czas jednego obiegu pętli.
         self.min_loop_time = float(settings.get('newLoopTime', self.min_loop_time)) / 1000
@@ -111,6 +120,7 @@ class Simulation:
 
             # Aktualizacja pozycji strażaków na obszarze lasu. Ma to wpływ na rozprzestrzenianie się pożaru.
             self.forest_area.firefighters_locations = list(Firefighter.locations.values())
+            print(len(list(Firefighter.locations.values())))
 
             # Funkcja odpowiedzialna za rozprzestrzenianie się ognia.
             self.forest_area.spread_fire()
