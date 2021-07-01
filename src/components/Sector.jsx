@@ -76,6 +76,13 @@ const Sector = (props) => {
         return isFireSource ? 'red' : forestTypeToSectorColorDict[forestType];
     }
 
+    const getOpacity = () => {
+        if (sectorState === 9) {
+            return 0.8;
+        }
+        return 0.6
+    }
+
     // Informacje na temat stylu w CSS
     const sectorStyle = {
         outline: 'none',
@@ -85,7 +92,7 @@ const Sector = (props) => {
         borderRadius: '1px',
         borderWidth: '3px',
         borderColor: `${getBorderColor()}`,
-        opacity: 0.6,
+        opacity: `${getOpacity()}`,
         background: `${getBackgroundColor()}`,
         //pointerEvents: `${props.didInit ? 'none' : 'all'}`,
     };
