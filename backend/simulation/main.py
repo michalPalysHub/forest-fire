@@ -1,6 +1,5 @@
 from time import time, sleep
-
-from flask import jsonify
+from typing import Tuple
 
 from .area import ForestArea
 from .agents import *
@@ -71,19 +70,19 @@ class Simulation:
         self.transfer.sectors_data = dict.fromkeys(self.forest_area.sectors, 0)
         self.sensors = self.forest_area.init_sensors()
 
-    def get_sectors_data(self) -> jsonify:
+    def get_sectors_data(self) -> Tuple[dict, bool]:
         """
         Zwraca JSON-a z aktualnymi informacjami na temat sektorów lasu.
         """
         self.sectors_data = self.transfer.get_sectors_data()
 
-        return jsonify(sectors=self.sectors_data, simulation_run=self.simulation_run)
+        return self.sectors_data, self.simulation_run
 
-    def get_particular_sector_data(self, sector_id: int) -> jsonify:
+    def get_particular_sector_data(self, sector_id: int) -> dict:
         """
         Zwraca JSON-a z aktualnymi informacjami na temat danego sektora lasu.
         """
-        return jsonify(self.sectors_data[sector_id])
+        return self.sectors_data[sector_id]
 
     def reset(self) -> None:
         """

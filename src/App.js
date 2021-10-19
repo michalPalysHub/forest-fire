@@ -35,7 +35,7 @@ const App = () => {
         fetch('/sectors')
             .then(response => response.json())
             .then(message => {
-                setSectorsData(message['sectors'])
+                setSectorsData(message['sectors_data'])
                 if (message['simulation_run'] === false) {
                     handleStopClick();
                 }
@@ -201,7 +201,7 @@ const postDataToAPI = (message, endpoint) => {
         method: 'POST',
         cache: 'no-cache',
         headers: {
-            'content_type': 'application/json'
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(message)
     });
