@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+
+  backend:
+    restart: always
+    build: ./backend
+    container_name: backend
+    command: python app.py
+    volumes:
+      - ./backend:/backend
+    ports:
+      - '5000:5000'
+
+  frontend:
+    restart: always
+    build: ./frontend
+    container_name: frontend
+    command: npm start
+    volumes:
+      - ./frontend:/frontend
+    ports:
+      - '3000:3000'
+    depends_on:
+      - backend
