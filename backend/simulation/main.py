@@ -4,6 +4,8 @@ from typing import Tuple
 from .area import ForestArea
 from .agents import *
 
+from .helpers.csv_helper import CsvLogger
+
 
 class Simulation:
     """
@@ -70,6 +72,9 @@ class Simulation:
         self.transfer.sectors_data = dict.fromkeys(self.forest_area.sectors, 0)
         self.sensors = self.forest_area.init_sensors()
 
+        # Instancja klasy słuzącej do logowania stanu wszystkich sektorów w trakcie pojedynczej symulacji
+        self.csv_logger = CsvLogger(self.transfer.get_sectors_data())
+
     def get_sectors_data(self) -> Tuple[dict, bool]:
         """
         Zwraca JSON-a z aktualnymi informacjami na temat sektorów lasu.
@@ -88,6 +93,7 @@ class Simulation:
         """
         Zatrzymanie symulacji oraz przywrócene ustawień początkowych.
         """
+        self.csv_logger.save_logs()
         self.__init__()
         self.simulation_run = False
 
@@ -134,5 +140,8 @@ class Simulation:
                 sleep(self.min_loop_time - time_elapsed)
 
             print(time_elapsed)
+
+            # Zapisanie stanu sektorów dla danej iteracji przy pomocy CsvLogger
+            self.csv_logger.log_current_forest_area_state(self.transfer.get_sectors_data())
 
         print('Simulation done.')
