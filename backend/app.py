@@ -27,11 +27,11 @@ def receive_init_data() -> jsonify:
 
 
 @app.route('/start', methods=['POST'])
-def run_simulation() -> jsonify:
+def start_simulation() -> jsonify:
     """
     Widok API odpowiedzialny uruchamiający symulację po otrzymaniu wiadomości.
     """
-    simulation.run()
+    simulation.start()
 
     return jsonify(message='Simulation started.', status=200)
 

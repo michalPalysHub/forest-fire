@@ -14,7 +14,7 @@ class ForestArea:
     reprezentujących sektor lasu oraz ułożenia czujników.
     """
 
-    def __init__(self, columns: int, rows: int, sector_size: int) -> None:
+    def __init__(self, columns: int, rows: int, sector_size: int):
         """
         Inicjalizacja instancji klasy ForestArea. Pobiera wymiary planszy oraz deklaruje wymagane kontenery na dane oraz
         flagi.
@@ -31,7 +31,7 @@ class ForestArea:
         self.forest_on_fire = False
         self.firefighters_locations = list()
 
-    def init_area(self, init_data: dict) -> None:
+    def init_area(self, init_data: dict):
         """
         Inicjalizacja danych na temat sektorów lasu na podstawie informacji uzyskanych od front-u po zatwierdzeniu
         początkowych parametrów lasu.
@@ -46,13 +46,13 @@ class ForestArea:
             self.sectors[sector_id] = ForestSector( sector_id, i, j, forest_type, is_fire_source)
             self.sectors[sector_id].neighbor_ids = self.get_direct_neighbor_ids(i, j)
 
-    def prepare_sector_buffors(self, data: dict) -> None:
+    def prepare_sector_buffors(self, data: dict):
         """
         Przygotowanie słownika z polem na dane dla każdego sektora planszy pod warunkiem, że został oznaczony jako las.
         """
         self.sectors = {int(uid): {} for uid in data if data[uid]['forestType'] != 0}
 
-    def init_fire(self) -> None:
+    def init_fire(self):
         """
         Wywołanie pożaru na kilku sektorach lasu na początku symulacji, oraz aktualizacja na tej podstawie sektorów
         sąsiednich. Docelowo sektory, na których będzie wywoływany pożar będą zaznaczane przez użytkownika.
@@ -83,7 +83,7 @@ class ForestArea:
 
         return self.sensors
 
-    def update_neighborhood(self, center: ForestSector) -> None:
+    def update_neighborhood(self, center: ForestSector):
         """
         Aktualizacja parametrów pogodowych na podstawie zmian w sektorze 'center'. Z założenia funkcja ta ma służyć
         do uwzględnienia wpływu pożaru wewnątrz jednego sektora na cały las. Przykładowo, gdy na skutek pożaru
@@ -157,7 +157,7 @@ class ForestArea:
         else:
             return None
 
-    def update_sector_due_fire(self, sector: ForestSector) -> None:
+    def update_sector_due_fire(self, sector: ForestSector):
         """
         Aktualizuje parametry danego sektoru na skutek trwającego pożaru. Uwzględnia także wpływ pożaru na sektory
         sąsiednie.
@@ -167,7 +167,7 @@ class ForestArea:
         if sector.burned:
             self.sectors_on_fire.remove(sector.id)
 
-    def set_neighbors_on_fire(self, uid: int, sector_on_fire: ForestSector) -> None:
+    def set_neighbors_on_fire(self, uid: int, sector_on_fire: ForestSector):
         """
         Funkcja odpowiedzialna za rozchodzenie się pożaru z jednego sektora na sąsiednie, nie objęte pożarem ani
         niespalone.
@@ -213,7 +213,7 @@ class ForestArea:
 
         return prob
 
-    def is_forest_on_fire(self) -> None:
+    def is_forest_on_fire(self):
         """
         Funkcja odpowiedzialna za sprawdzenie, czy pożar został ugaszony lub cały las zostal spalony.
         """
@@ -222,7 +222,7 @@ class ForestArea:
         else:
             self.forest_on_fire = True
 
-    def spread_fire(self) -> None:
+    def spread_fire(self):
         """
         Funkcja odpowiedzialna za progresywne rozprzestrzenianie się pożaru.
         """
@@ -241,7 +241,7 @@ class ForestSector:
     """
     Zawiera informacje na temat poszczególnych, niejmniejszych sektorów lasu.
     """
-    def __init__(self, uid: int, i: int, j: int, forest_type: int, is_fire_source: bool) -> None:
+    def __init__(self, uid: int, i: int, j: int, forest_type: int, is_fire_source: bool):
         """
         Inicjalizacja sektora lasu. Deklaruje informacje o położeniu, typie lasu, warunkach pogodowych, flagi
         informujące o stanie pożaru oraz inne kontenery na dane.
@@ -288,7 +288,7 @@ class ForestSector:
         """
         return str(self.id)
 
-    def set_on_fire(self) -> None:
+    def set_on_fire(self):
         """
         Inicjacja pożaru na danym sektorze. Skutkuje to zmianą wartości parametrów pogodowych.
         """
@@ -336,7 +336,7 @@ class ForestSector:
 
         return weather_data
 
-    def update_data(self, data: dict) -> None:
+    def update_data(self, data: dict):
         """
         Aktualizacja parametrów danego sektoru na skutek uruchomionej symulacji.
         """
@@ -349,7 +349,7 @@ class ForestSector:
         self.pm25 = data.get('pm25', self.pm25)
         self.update_risk_info()
 
-    def update_cause_of_fire(self) -> None:
+    def update_cause_of_fire(self):
         """
         Aktualizacja parametrów stanu sektora oraz parametrów pogodowych na skutek pożaru. Counter zlicza wywołania tej
         funkcji, i jeżeli osiągnie zadeklarowaną wartość zwiększa stan ryzyka lub zagrożenia.
@@ -367,7 +367,7 @@ class ForestSector:
     def reduce_fuel(self):
         self.fuel -= self.ffdi * self.state / 20
 
-    def update_risk_info(self) -> None:
+    def update_risk_info(self):
         """
         Aktualizacja informacji mówiących o zagrożeniu pożarem.
         """
@@ -377,7 +377,7 @@ class ForestSector:
         elif not self.on_fire and not self.burned:
             self.update_state_due_risk()
 
-    def update_ffdi(self) -> None:
+    def update_ffdi(self):
         """
         Aktualizacja współczynnika FFDI.
         """
@@ -385,7 +385,7 @@ class ForestSector:
             self.k * 2 * exp(-0.45 + 0.987 * log(10 * (100 - self.litter_moisture) / 100) - 0.0345 *
                              self.air_humidity + 0.0338 * self.temperature + 0.0234 * self.wind_speed), 2)
 
-    def update_state_due_risk(self) -> None:
+    def update_state_due_risk(self):
         """
         Wyznaczenie stanu pożarowego na danym sektorze, na podstawie współczynnika FFDI.
         """
@@ -400,7 +400,7 @@ class ForestSector:
         elif self.ffdi >= 50:
             self.state = 5
 
-    def update_state_due_fire(self) -> None:
+    def update_state_due_fire(self):
         if self.fuel <= 800 and not self.firefighter_present:
             self.can_spread = True
 

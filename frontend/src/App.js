@@ -28,7 +28,7 @@ const App = () => {
     const [selectedSectorIndex, setSelectedSectorIndex] = useState(-1);
 
     // Częstotliwość pobierania danych z /simulation, szybkość symulacji - zmieniana suwakiem
-    const [timeout, setTimeout] = useState(750);
+    const [timeout, setTimeout] = useState(1000);
 
     // Pobranie danych symulacji dla wszystkich sektorów
     const getSimulationDataFromApi = () => {
@@ -74,7 +74,7 @@ const App = () => {
         setDidInit(false);
         setDidSpecifyForestType(false);
         setSimulationRun(false);
-        setTimeout(750);
+        setTimeout(1000);
         clearInterval(timer);
         postDataToAPI('Data reset', '/reset');
         postDataToAPI({ 'firefighters_limit': 5 }, '/settings');

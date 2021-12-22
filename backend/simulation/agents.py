@@ -29,12 +29,12 @@ class Transfer:
 
 class Analyst:
 
-    def __init__(self, forest_area) -> None:
+    def __init__(self, forest_area):
         self.forest_area = forest_area
         self.num_of_on_fire = {'previous': 0, 'present': 0}
         self.on_fire_diff = int()
 
-    def update_number_of_sectors_on_fire(self) -> None:
+    def update_number_of_sectors_on_fire(self):
         self.num_of_on_fire['previous'] = self.num_of_on_fire['present']
         self.num_of_on_fire['present'] = len(self.forest_area.sectors_on_fire)
         self.on_fire_diff = self.num_of_on_fire['present'] - self.num_of_on_fire['previous']
@@ -42,7 +42,7 @@ class Analyst:
 
 class Overseer:
 
-    def __init__(self, forest_area) -> None:
+    def __init__(self, forest_area):
         self.forest_area = forest_area
         self.firefighters = dict()
         self.firefighters_called_on = list()
@@ -71,7 +71,7 @@ class Firefighter:
     move_speed = 1
     locations = dict()
 
-    def __init__(self, forest_area, uid: int, order_sector_id: int, order_i: int, order_j: int) -> None:
+    def __init__(self, forest_area, uid: int, order_sector_id: int, order_i: int, order_j: int):
         self.forest_area = forest_area
         self.id = uid
         self.sector_id = 428
@@ -86,7 +86,7 @@ class Firefighter:
     def __repr__(self) -> str:
         return str(self.id)
 
-    def move(self) -> None:
+    def move(self):
         if self.i > self.order_i:
             self.i -= self.move_speed
         elif self.i < self.order_i:
@@ -112,7 +112,7 @@ class Firefighter:
 
         Firefighter.locations[self.id] = self.sector_id
 
-    def fight_fire(self) -> None:
+    def fight_fire(self):
         self.sector.firefighter_present = True
         self.sector.fuel += 100
         if self.sector.fuel >= 1000:
@@ -123,7 +123,7 @@ class Firefighter:
             self.forest_area.sectors_on_fire.remove(self.sector_id)
             self.get_new_order()
 
-    def get_new_order(self) -> None:
+    def get_new_order(self):
         if self.forest_area.forest_on_fire:
             self.order_sector_id = self.get_closest_on_fire_sector()
             order_sector = self.forest_area.sectors[self.order_sector_id]
