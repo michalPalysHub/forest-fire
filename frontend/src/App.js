@@ -131,7 +131,7 @@ const App = () => {
         buttonPanel = <div style={{ marginBottom: '5px' }}>
             {startStopSimBtn}
             <Button variant="info" onClick={handleResetClick}>Reset</Button>
-            <p style={{ marginTop: '5px' }}>Prędkość symulacji: {timeout} [ms]</p>
+            <p style={{ marginTop: '5px' }}>Simulation speed: {timeout} [ms]</p>
             <RangeStepInput
                 min={100} max={3000}
                 style={simulationRun ? { pointerEvents: "none", opacity: "0.4" } : {}}
@@ -163,12 +163,12 @@ const App = () => {
         statsPanel = <div>
             <Jumbotron>
                 <Container>
-                    <h5>Dane dla wybranego sektora</h5>
+                    <h5>Data for selected sector</h5>
                     <Table striped bordered hover>
                         <thead>
                             <tr>
-                                <th>Parametr</th>
-                                <th>Wartość</th>
+                                <th>Parameter</th>
+                                <th>Value</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -215,18 +215,18 @@ const App = () => {
 
 
 const sectorParametersNames = [
-    "Identyfikator sektora",
-    "Wiersz",
-    "Kolumna",
-    "Temperatura [°C]",
-    "Wilgotność powietrza [%]",
-    "Wilgotność ściółki [%]",
-    "Stężenie CO2 [ppm]",
-    "Stężenie PM2,5 [ug/m3]",
-    "Kierunek wiatru",
-    "Prędkość wiatru [km/h]",
+    "Sector ID",
+    "Row",
+    "Column",
+    "Temperature [°C]",
+    "Air humidity [%]",
+    "Litter moisture [%]",
+    "CO2 concentration [ppm]",
+    "PM2,5 concentration [ug/m3]",
+    "Wind direction",
+    "Wind speed [km/h]",
     "FFDI",
-    "Stan sektora"
+    "Sector state"
 ]
 
 const postDataToAPI = (message, endpoint) => {

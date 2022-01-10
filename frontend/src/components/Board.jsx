@@ -110,29 +110,29 @@ const Board = (props) => {
             display: 'flex',
             justifyContent: 'center',
         }}>
-            <Button variant="info" onClick={handleInitClick} style={{ marginRight: '10px' }}>Inicjuj</Button>
+            <Button variant="info" onClick={handleInitClick} style={{ marginRight: '10px' }}>Init fire</Button>
         </div>;
     } else {
         controlsPanel = <div className="centered" style={{
             display: 'flex',
             justifyContent: 'center',
         }}>
-            <Button variant="info" onClick={props.onForestTypeSpecification} style={{ marginRight: '10px' }}>Zapisz typ lasu</Button>
+            <Button variant="info" onClick={props.onForestTypeSpecification} style={{ marginRight: '10px' }}>Save forest type</Button>
             <div style={{
                 height: '38px',
             }}></div>
-            <DropdownButton variant="info" title="Ustaw typ lasu globalnie">
+            <DropdownButton variant="info" title="Set forest type globally">
                 <Dropdown.Item as="button" onClick={setForestTypeToNoneGlobally}>
-                    Brak
+                    None
                 </Dropdown.Item>
                 <Dropdown.Item as="button" onClick={setForestTypeToDeciduousGlobally}>
-                    Liściasty
+                    Deciduous
                 </Dropdown.Item>
                 <Dropdown.Item as="button" onClick={setForestTypeToMixedGlobally}>
-                    Mieszany
+                    Mixed
                 </Dropdown.Item>
                 <Dropdown.Item as="button" onClick={setForestTypeToConiferousGlobally}>
-                    Iglasty
+                    Coniferous
                 </Dropdown.Item>
             </DropdownButton>
         </div>;

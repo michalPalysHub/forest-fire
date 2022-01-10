@@ -5,14 +5,11 @@ import Button from 'react-bootstrap/Button';
 let firefightersLimit = 5;
 
 const Popup = (props) => {
-    // const [firefightersLimit, setFirefightersLimit] = useState(5);
 
     const handleSubmit = () => {
         props.handleClose();
         firefightersLimit = document.getElementById('limitFormValue').value;
-        // setFirefightersLimit(limit)
         props.postDataToAPI({ 'firefighters_limit': firefightersLimit }, '/settings');
-        console.log(firefightersLimit)
     }
 
     return (
@@ -21,11 +18,11 @@ const Popup = (props) => {
             <span className="close-icon" onClick={handleSubmit}>x</span>
               <>
                   <form>
-                      <b>Podaj liczbę wozów w wybranej jednostce straży pożarnej:</b>
+                      <b>Enter the number of cars in the selected fire department:</b>
                       <p></p>
                       <input id='limitFormValue' type='number' defaultValue={firefightersLimit}/>
                   </form>
-                  <Button variant="info" onClick={handleSubmit} style={{ marginTop: '10px'}}>Potwierdź</Button>
+                  <Button variant="info" onClick={handleSubmit} style={{ marginTop: '10px'}}>Confirm</Button>
                 </>
           </div>
         </div>
