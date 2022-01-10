@@ -2,14 +2,14 @@ import React, {useState} from "react";
 
 import Button from 'react-bootstrap/Button';
 
-let firefightersLimit = 5;
-
 const Popup = (props) => {
+
+    let firefightersAmount = props.firefightersAmount;
 
     const handleSubmit = () => {
         props.handleClose();
-        firefightersLimit = document.getElementById('limitFormValue').value;
-        props.postDataToAPI({ 'firefighters_limit': firefightersLimit }, '/settings');
+        firefightersAmount = document.getElementById('limitFormValue').value;
+        props.postDataToAPI({ 'firefighters_limit': firefightersAmount }, '/settings');
     }
 
     return (
@@ -20,7 +20,7 @@ const Popup = (props) => {
                   <form>
                       <b>Enter the number of cars in the selected fire department:</b>
                       <p></p>
-                      <input id='limitFormValue' type='number' defaultValue={firefightersLimit}/>
+                      <input id='limitFormValue' type='number' defaultValue={firefightersAmount}/>
                   </form>
                   <Button variant="info" onClick={handleSubmit} style={{ marginTop: '10px'}}>Confirm</Button>
                 </>

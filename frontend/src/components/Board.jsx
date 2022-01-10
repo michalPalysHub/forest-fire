@@ -164,6 +164,7 @@ const Board = (props) => {
                                 didSpecifyForestType={props.didSpecifyForestType}
                                 setSelectedSectorIndex={props.setSelectedSectorIndex}
                                 postDataToAPI={props.postDataToAPI}
+                                firefightersAmount={props.firefightersPositions.filter(id=>id===i).length}
                                 key={i}
                         />
                     ))}

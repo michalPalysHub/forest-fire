@@ -31,6 +31,9 @@ const App = () => {
     // JSON zawierający aktualne dane każdego z sektorów pochodzące z API
     const [sectorsData, setSectorsData] = useState({});
 
+    // JSON zawierający aktualne id sektorów na których są strażacy
+    const [firefightersPositions, setFirefightersPositions] = useState([]);
+
     // String zawierający informację o aktualnym czasie.
     const [dateTime, setDateTime] = useState(null);
 
@@ -46,6 +49,7 @@ const App = () => {
             .then(response => response.json())
             .then(message => {
                 setSectorsData(message['sectors_data'])
+                setFirefightersPositions(Object.values(message['firefighters_positions']))
                 if (message['simulation_run'] === false) {
                     handleStopClick();
                 }
@@ -54,18 +58,24 @@ const App = () => {
 
     // Pobranie informacji o czasie
     const fetchDateTime = () => {
-        setInterval( () => {
-            fetch('/datetime')
-              .then(response => response.json())
-              .then(message => {
-                  setDateTime(message['dateTime'])
-                  console.log(message['dateTime'])
+        fetch('/datetime')
+          .then(response => response.json())
+          .then(message => {
+              setDateTime(message['dateTime'])
           })
+    }
+
+    const fetchCyclical = () => {
+        setInterval(() => {
+            getSimulationDataFromApi()
+        }, timeout)
+        setInterval(() => {
+            fetchDateTime()
         }, 250)
     }
 
     useEffect(() => {
-        fetchDateTime()
+        fetchCyclical();
     }, [])
 
     // Zmiana statusu określenia 
@@ -77,13 +87,11 @@ const App = () => {
     const onDataInit = () => {
         setDidInit(true);
         postDataToAPI({ 'newLoopTime': timeout }, '/settings');
-        getSimulationDataFromApi();
     }
 
     // Uruchomienie symulacji
     const handleStartClick = () => {
         setSimulationRun(true);
-        setTimer(setInterval(() => getSimulationDataFromApi(), timeout));
         postDataToAPI('Start simulation', '/start')
     }
 
@@ -103,12 +111,7 @@ const App = () => {
         clearInterval(timer);
         postDataToAPI('Data reset', '/reset');
         postDataToAPI({ 'firefighters_limit': 5 }, '/settings');
-        for (var id = 0; id < Object.keys(sectorsData).length; id++) {
-            if (sectorsData[id] != null) {
-                sectorsData[id].sector_state = 0;
-                sectorsData[id].is_fire_source = false;
-            }
-        }
+        getSimulationDataFromApi();
     }
 
     // Zmiana częstotliwości pobierania danych z /simulation, szybkości symulacji
@@ -194,6 +197,7 @@ const App = () => {
                 <StyledLabel>{`${dateTime}`}</StyledLabel>
                 <Board
                   simulationData={sectorsData}
+                  firefightersPositions={firefightersPositions}
                   setSelectedSectorIndex={setSelectedSectorIndex}
                   onForestTypeSpecification={onForestTypeSpecification}
                   didSpecifyForestType={didSpecifyForestType}

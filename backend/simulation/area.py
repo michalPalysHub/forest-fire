@@ -4,7 +4,7 @@ import random
 
 from math import ceil, sqrt, log, exp
 
-from .agents import Sensor
+from .agents import Sensor, Firefighter
 from .constants import CO2_START_VALUES, PM25_START_VALUE, K_FACTORS, CHANGEABLE_PARAMETERS, WIND_DIRECTIONS
 
 
@@ -29,7 +29,7 @@ class ForestArea:
 
         self.fire_initted = False
         self.forest_on_fire = False
-        self.firefighters_locations = list()
+        self.firefighters_positions = dict()
 
     def init_area(self, init_data: dict):
         """
@@ -157,6 +157,9 @@ class ForestArea:
         else:
             return None
 
+    def update_firefighters_positions(self, firefighters: dict[int ,Firefighter]):
+        self.firefighters_positions = {firefighter.id: firefighter.sector_id for firefighter in firefighters.values()}
+
     def update_sector_due_fire(self, sector: ForestSector):
         """
         Aktualizuje parametry danego sektoru na skutek trwającego pożaru. Uwzględnia także wpływ pożaru na sektory
@@ -174,7 +177,7 @@ class ForestArea:
         """
         neighbor = self.sectors[uid]
         if not (neighbor.on_fire or neighbor.burned):
-            if neighbor.id not in self.firefighters_locations:
+            if neighbor.id not in self.firefighters_positions.values():
                 prob = self.get_spread_probability(sector_on_fire, neighbor)
                 if random.random() <= prob:
                     self.sectors_on_fire.append(uid)
@@ -232,7 +235,7 @@ class ForestArea:
             neighbor_ids = sector.neighbor_ids
             if sector.can_spread:
                 for neighbor_id in neighbor_ids:
-                    if neighbor_id not in self.firefighters_locations:
+                    if neighbor_id not in self.firefighters_positions.values():
                         self.set_neighbors_on_fire(neighbor_id, sector)
         self.is_forest_on_fire()
 

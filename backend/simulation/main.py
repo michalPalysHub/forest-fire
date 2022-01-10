@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from time import time, sleep
 from typing import Tuple
 from threading import Thread
@@ -46,11 +48,10 @@ class Simulation:
 
         # Limit dostępnych wozów strażackich.
         self.firefighters_limit = 5
-        Firefighter.limit = self.firefighters_limit
 
         # Strażacy w liście.
-        self.firefighters = list()
-        Firefighter.locations = dict()
+        self.firefighters = Firefighter.init_firefighters(self.firefighters_limit, self.forest_area, self.datetime)
+        self.forest_area.update_firefighters_positions(self.firefighters)
 
         # Flaga informująca o statusie uruchomienia symulacji.
         self.simulation_run = False
@@ -68,7 +69,9 @@ class Simulation:
         self.sector_size = settings.get('sector_size', self.sector_size)
 
         # Ilość dostępnych wozów strażackich.
-        Firefighter.limit = int(settings.get('firefighters_limit', self.firefighters_limit))
+        self.firefighters_limit = int(settings.get('firefighters_limit', self.firefighters_limit))
+        self.firefighters = Firefighter.init_firefighters(self.firefighters_limit, self.forest_area, self.datetime)
+        self.forest_area.update_firefighters_positions(self.firefighters)
 
         # Minimalny czas jednego obiegu pętli.
         self.min_loop_time = int(settings.get('newLoopTime', self.min_loop_time))/1000
@@ -102,8 +105,9 @@ class Simulation:
         Zatrzymanie symulacji oraz przywrócene ustawień początkowych.
         """
         self.csv_logger.save_logs()
-        self.__init__()
+        self.csv_logger.is_logging = False
         self.simulation_run = False
+        self.__init__()
 
     def start(self):
         """
@@ -146,8 +150,7 @@ class Simulation:
                 firefighter.move()
 
             # Aktualizacja pozycji strażaków na obszarze lasu. Ma to wpływ na rozprzestrzenianie się pożaru.
-            self.forest_area.firefighters_locations = list(Firefighter.locations.values())
-            print(len(list(Firefighter.locations.values())))
+            self.forest_area.update_firefighters_positions(self.firefighters)
 
             # Funkcja odpowiedzialna za rozprzestrzenianie się ognia.
             self.forest_area.spread_fire()

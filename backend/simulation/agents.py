@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .helpers.datetime import Datetime
 
 
@@ -59,8 +61,8 @@ class Overseer:
                     if len(self.firefighters) < Firefighter.limit:
                         sector = self.forest_area.sectors[sector_id]
                         uid = len(self.firefighters)
-                        self.firefighters[uid] = Firefighter(self.forest_area, uid, sector_id, sector.i, sector.j,
-                                                             self.datetime)
+                        self.firefighters[uid] = Firefighter(uid, self.forest_area, self.datetime,
+                                                             sector_id, sector.i, sector.j)
                         self.firefighters_called.append(sector_id)
 
         return self.firefighters
@@ -78,27 +80,33 @@ class Firefighter:
     day_move_speed = 1
     night_move_speed = 0.75
     night_hours = ['22:00', '6:00']
-    locations = dict()
 
-    def __init__(self, forest_area, uid: int, order_sector_id: int, order_i: int, order_j: int, datetime: Datetime):
+    def __init__(
+            self,
+            uid: int,
+            forest_area,
+            datetime: Datetime,
+            order_sector_id: int = 0,
+            order_i: int = 0,
+            order_j: int = 0
+    ):
         self.forest_area = forest_area
         self.datetime = datetime
         self.id = uid
         self.sector_id = 428
-        self.sector = self.forest_area.sectors[self.sector_id]
         self.i = 10
         self.j = 28
-        self.order_sector_id = order_sector_id
-        self.order_i = order_i
-        self.order_j = order_j
-        Firefighter.locations[self.id] = self.sector_id
+        self.order_sector_id = order_sector_id if order_sector_id is not None else self.sector_id
+        self.order_i = order_i if order_i is not None else self.i
+        self.order_j = order_j if order_j is not None else self.j
+        self.forest_area.firefighters_positions[self.id] = self.sector_id
 
     def __repr__(self) -> str:
         return str(self.id)
 
     def move(self):
         move_speed = self.__get_move_speed()
-        print(move_speed)
+        self.get_order()
         if self.i > self.order_i:
             self.i -= move_speed
         elif self.i < self.order_i:
@@ -122,7 +130,7 @@ class Firefighter:
         for neighbor_id in self.sector.neighbor_ids:
             self.forest_area.sectors[neighbor_id].can_spread = False
 
-        Firefighter.locations[self.id] = self.sector_id
+        self.forest_area.firefighters_positions[self.id] = self.sector_id
 
     def fight_fire(self):
         self.sector.firefighter_present = True
@@ -133,9 +141,11 @@ class Firefighter:
             self.sector.state = 5
             self.sector.can_spread = False
             self.forest_area.sectors_on_fire.remove(self.sector_id)
-            self.get_new_order()
+            self.get_order()
 
-    def get_new_order(self):
+    def get_order(self):
+        if self.order_sector_id in self.forest_area.sectors_on_fire:
+            return
         if self.forest_area.forest_on_fire:
             self.order_sector_id = self.get_closest_on_fire_sector()
             order_sector = self.forest_area.sectors[self.order_sector_id]
@@ -162,3 +172,8 @@ class Firefighter:
         if self.datetime > night_start_dt or self.datetime < night_end_dt:
             return self.night_move_speed
         return self.day_move_speed
+
+    @classmethod
+    def init_firefighters(cls, limit: int, forest_area, datetime: Datetime) -> dict[int, Firefighter]:
+        cls.limit = limit
+        return {i: Firefighter(i, forest_area, datetime) for i in range(limit)}

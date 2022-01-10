@@ -73,8 +73,14 @@ def get_sectors_data() -> jsonify:
     Widok API przechowujący dane na temat wszystkich, zdefiniowanych sektorów.
     """
     sectors_data, simulation_run = simulation.get_sectors_data()
+    firefighters_positions = simulation.forest_area.firefighters_positions
 
-    return jsonify(sectors_data=sectors_data, simulation_run=simulation_run, status=200)
+    return jsonify(
+        sectors_data=sectors_data,
+        firefighters_positions=firefighters_positions,
+        simulation_run=simulation_run,
+        status=200
+    )
 
 
 @app.route('/sectors/<int:uid>', methods=['GET'])

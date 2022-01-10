@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Popup from './Popup';
+import styled from 'styled-components';
 
 // Słownik umożliwiający reprezentację danego typu lasu określonym kolorem kwadratu
 const forestTypeToSectorColorDict = {
@@ -24,13 +25,28 @@ const forestStateToSectorBorderColorDict = {
 
 const fireStationColor = '#0028a7';
 
+const StyledFirefighterLabel = styled.p`
+  font-size: 19px;
+  font-weight: bold;
+`;
+
 // Słownik umożliwiający reprezentację stanu zagrożenia pożarem lub jego zaawansowania dla danego sektora.
 const Sector = (props) => {
     // Zmienne stanu reprezentujące współrzędne służące do identyfikacji danego kwadratu
     const [i, setRowIndex] = useState(props.i);
     const [j, setColumnIndex] = useState(props.j);
     const [fireStation, setFireStation] = useState(false);
+    const [firefightersAmount, setFirefightersAmount] = useState(props.firefightersAmount);
     const sectorState = props.sectorState;
+
+    const fetchFirefghtersAmount = () => {
+        fetch('/sectors')
+          .then(response => response.json())
+          .then(message => {
+              const positions = Object.values(message['firefighters_positions'])
+              setFirefightersAmount(positions.filter(id=>id===props.id).length)
+          })
+    }
 
     // Współrzędne remizy strażackiej.
     const fireStationCoords = {'i': 10, 'j': 28}
@@ -39,6 +55,7 @@ const Sector = (props) => {
     if (i === fireStationCoords['i'] && j === fireStationCoords['j']) {
         if (!fireStation) {
             setFireStation(true);
+            // fetchFirefghtersAmount();
         }
     }
 
@@ -115,6 +132,7 @@ const Sector = (props) => {
 
     // Funkcja wywołania po każdym renderowaniu komponentu (po każdej jego zmianie)
     useEffect(() => {
+        setFirefightersAmount(props.firefightersAmount)
         props.onSectorUpdate(props.id, i, j, forestType, isFireSource)
         if (props.updateForestTypeGlobal) {
             updateForestTypeGlobal();
@@ -123,12 +141,14 @@ const Sector = (props) => {
 
     // Zwracany kod HTML
     return <div>
-        <button style={sectorStyle}
-                onClick={handleClick}
-        />
+        <button style={sectorStyle} onClick={handleClick}>
+            <StyledFirefighterLabel>{firefightersAmount ? firefightersAmount : ''}</StyledFirefighterLabel>
+        </button>
         {isOpen && <Popup
             handleClose={togglePopup}
             postDataToAPI={props.postDataToAPI}
+            firefightersAmount={firefightersAmount}
+            setFirefightersAmount={setFirefightersAmount}
         />}
     </div>
 };
