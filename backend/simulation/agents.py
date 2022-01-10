@@ -1,3 +1,6 @@
+from .helpers.datetime import Datetime
+
+
 class Sensor:
     SECTOR_SIZE = 5
 
@@ -29,8 +32,9 @@ class Transfer:
 
 class Analyst:
 
-    def __init__(self, forest_area):
+    def __init__(self, forest_area, datetime: Datetime):
         self.forest_area = forest_area
+        self.datetime = datetime
         self.num_of_on_fire = {'previous': 0, 'present': 0}
         self.on_fire_diff = int()
 
@@ -42,20 +46,22 @@ class Analyst:
 
 class Overseer:
 
-    def __init__(self, forest_area):
+    def __init__(self, forest_area, datetime: Datetime):
         self.forest_area = forest_area
+        self.datetime = datetime
         self.firefighters = dict()
-        self.firefighters_called_on = list()
+        self.firefighters_called = list()
 
     def call_firefighters(self, on_fire_diff: int) -> dict:
         if on_fire_diff > 0:
             for sector_id in self.forest_area.sectors_on_fire:
-                if sector_id not in self.firefighters_called_on:
+                if sector_id not in self.firefighters_called:
                     if len(self.firefighters) < Firefighter.limit:
                         sector = self.forest_area.sectors[sector_id]
                         uid = len(self.firefighters)
-                        self.firefighters[uid] = Firefighter(self.forest_area, uid, sector_id, sector.i, sector.j)
-                        self.firefighters_called_on.append(sector_id)
+                        self.firefighters[uid] = Firefighter(self.forest_area, uid, sector_id, sector.i, sector.j,
+                                                             self.datetime)
+                        self.firefighters_called.append(sector_id)
 
         return self.firefighters
 
@@ -68,11 +74,15 @@ class Patrol:
 
 class Firefighter:
 
-    move_speed = 1
+    limit = 5
+    day_move_speed = 1
+    night_move_speed = 0.75
+    night_hours = ['22:00', '6:00']
     locations = dict()
 
-    def __init__(self, forest_area, uid: int, order_sector_id: int, order_i: int, order_j: int):
+    def __init__(self, forest_area, uid: int, order_sector_id: int, order_i: int, order_j: int, datetime: Datetime):
         self.forest_area = forest_area
+        self.datetime = datetime
         self.id = uid
         self.sector_id = 428
         self.sector = self.forest_area.sectors[self.sector_id]
@@ -87,10 +97,12 @@ class Firefighter:
         return str(self.id)
 
     def move(self):
+        move_speed = self.__get_move_speed()
+        print(move_speed)
         if self.i > self.order_i:
-            self.i -= self.move_speed
+            self.i -= move_speed
         elif self.i < self.order_i:
-            self.i += self.move_speed
+            self.i += move_speed
         self.sector_id = self.forest_area.get_id(self.i, self.j)
         if self.sector_id in self.forest_area.sectors:
             self.sector = self.forest_area.sectors[self.sector_id]
@@ -98,9 +110,9 @@ class Firefighter:
                 self.fight_fire()
 
         if self.j > self.order_j:
-            self.j -= self.move_speed
+            self.j -= move_speed
         elif self.j < self.order_j:
-            self.j += self.move_speed
+            self.j += move_speed
         self.sector_id = self.forest_area.get_id(self.i, self.j)
         if self.sector_id in self.forest_area.sectors:
             self.sector = self.forest_area.sectors[self.sector_id]
@@ -144,6 +156,9 @@ class Firefighter:
 
         return uid
 
-    @classmethod
-    def set_limit(cls, number):
-        Firefighter.limit = number
+    def __get_move_speed(self):
+        night_start_dt = Datetime.from_string(self.night_hours[0])
+        night_end_dt = Datetime.from_string(self.night_hours[1])
+        if self.datetime > night_start_dt or self.datetime < night_end_dt:
+            return self.night_move_speed
+        return self.day_move_speed

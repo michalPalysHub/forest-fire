@@ -23,6 +23,9 @@ class Simulation:
         self.rows = 20
         self.sector_size = 30
 
+        # Instancja klasy odpowiedzialnej ze przechowywanie informacji o czasie.
+        self.datetime = Datetime()
+
         # Minimalny czas jednego obiegu pętli [ms].
         self.min_loop_time = 1000
 
@@ -31,8 +34,8 @@ class Simulation:
 
         # Instancje pojedynczych agentów biorących udział w symulacji.
         self.transfer = Transfer(self.forest_area)
-        self.analyst = Analyst(self.forest_area)
-        self.overseer = Overseer(self.forest_area)
+        self.analyst = Analyst(self.forest_area, self.datetime)
+        self.overseer = Overseer(self.forest_area, self.datetime)
 
         # Dane na temat czujników(???) oraz sektorów są przechowywane w słownikach.
         self.sensors = dict()
@@ -41,12 +44,9 @@ class Simulation:
         # Instancja klasy słuzącej do logowania stanu wszystkich sektorów w trakcie pojedynczej symulacji
         self.csv_logger = CsvLogger(self.transfer)
 
-        # Instancja klasy odpowiedzialnej ze przechowywanie informacji o czasie.
-        self.datetime = Datetime()
-
         # Limit dostępnych wozów strażackich.
         self.firefighters_limit = 5
-        Firefighter.set_limit(self.firefighters_limit)
+        Firefighter.limit = self.firefighters_limit
 
         # Strażacy w liście.
         self.firefighters = list()
@@ -68,8 +68,7 @@ class Simulation:
         self.sector_size = settings.get('sector_size', self.sector_size)
 
         # Ilość dostępnych wozów strażackich.
-        self.firefighters_limit = int(settings.get('firefighters_limit', self.firefighters_limit))
-        Firefighter.set_limit(self.firefighters_limit)
+        Firefighter.limit = int(settings.get('firefighters_limit', self.firefighters_limit))
 
         # Minimalny czas jednego obiegu pętli.
         self.min_loop_time = int(settings.get('newLoopTime', self.min_loop_time))/1000
