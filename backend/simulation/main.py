@@ -6,6 +6,7 @@ from .area import ForestArea
 from .agents import *
 
 from .helpers.csv_helper import CsvLogger
+from .helpers.datetime import Datetime
 
 
 class Simulation:
@@ -39,6 +40,9 @@ class Simulation:
 
         # Instancja klasy słuzącej do logowania stanu wszystkich sektorów w trakcie pojedynczej symulacji
         self.csv_logger = CsvLogger(self.transfer)
+
+        # Instancja klasy odpowiedzialnej ze przechowywanie informacji o czasie.
+        self.datetime = Datetime()
 
         # Limit dostępnych wozów strażackich.
         self.firefighters_limit = 5
@@ -157,6 +161,8 @@ class Simulation:
             time_elapsed = time() - start
             if time_elapsed < self.min_loop_time:
                 sleep(self.min_loop_time - time_elapsed)
+
+            self.datetime.move()
 
             print(time_elapsed)
 

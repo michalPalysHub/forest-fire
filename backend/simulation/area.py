@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import random
 
-from math import ceil, sqrt, log, exp, pi
+from math import ceil, sqrt, log, exp
 
 from .agents import Sensor
 from .constants import CO2_START_VALUES, PM25_START_VALUE, K_FACTORS, CHANGEABLE_PARAMETERS, WIND_DIRECTIONS

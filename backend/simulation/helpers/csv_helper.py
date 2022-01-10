@@ -1,7 +1,6 @@
 import os
 import pandas as pd
 from datetime import datetime
-from time import sleep
 
 from ..agents import Transfer
 

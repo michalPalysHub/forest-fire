@@ -88,5 +88,13 @@ def get_particular_sector_data(uid: int) -> jsonify:
         return jsonify(message='Sector with given ID does not exist!', status=404)
 
 
+@app.route('/datetime', methods=['GET'])
+def get_datetime() -> jsonify:
+    """
+    Widok API zwracający aktualny czas i datę symulacji.
+    """
+    return jsonify(dateTime=str(simulation.datetime), status=200)
+
+
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0")

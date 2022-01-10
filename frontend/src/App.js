@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Board from './components/Board'
+import styled from 'styled-components';
 
 import Button from 'react-bootstrap/Button';
 import Jumbotron from 'react-bootstrap/Jumbotron';
@@ -7,6 +8,12 @@ import Table from 'react-bootstrap/Table';
 import { RangeStepInput } from 'react-range-step-input';
 import './App.css';
 import { Container } from 'react-bootstrap';
+
+const StyledLabel = styled.p`
+  font-size: 40px;
+  text-align: center;
+  font-weight: bold;
+`;
 
 const App = () => {
     // Flaga informująca o tym, czy został określony obszar lasu oraz jego typ dla wszystkich sektorów
@@ -24,6 +31,9 @@ const App = () => {
     // JSON zawierający aktualne dane każdego z sektorów pochodzące z API
     const [sectorsData, setSectorsData] = useState({});
 
+    // String zawierający informację o aktualnym czasie.
+    const [dateTime, setDateTime] = useState(null);
+
     // Indeks sektora wybranego do podglądu parametrów 
     const [selectedSectorIndex, setSelectedSectorIndex] = useState(-1);
 
@@ -39,9 +49,24 @@ const App = () => {
                 if (message['simulation_run'] === false) {
                     handleStopClick();
                 }
-            }
-            );
+            });
     }
+
+    // Pobranie informacji o czasie
+    const fetchDateTime = () => {
+        setInterval( () => {
+            fetch('/datetime')
+              .then(response => response.json())
+              .then(message => {
+                  setDateTime(message['dateTime'])
+                  console.log(message['dateTime'])
+          })
+        }, 250)
+    }
+
+    useEffect(() => {
+        fetchDateTime()
+    }, [])
 
     // Zmiana statusu określenia 
     const onForestTypeSpecification = () => {
@@ -162,24 +187,32 @@ const App = () => {
     }
 
     return (
-        <div className="main">
-            <h1 className="centered"> Forest fire </h1>
-            <Board
-                simulationData={sectorsData}
-                setSelectedSectorIndex={setSelectedSectorIndex}
-                onForestTypeSpecification={onForestTypeSpecification}
-                didSpecifyForestType={didSpecifyForestType}
-                onDataInit={onDataInit}
-                didInit={didInit}
-                postDataToAPI = {postDataToAPI}
-            />
-            <div className="centered">
-                {buttonPanel}
-                {statsPanel}
+      <>
+          {sectorsData && dateTime ? (
+            <div className="main">
+                <StyledLabel> Forest fire </StyledLabel>
+                <StyledLabel>{`${dateTime}`}</StyledLabel>
+                <Board
+                  simulationData={sectorsData}
+                  setSelectedSectorIndex={setSelectedSectorIndex}
+                  onForestTypeSpecification={onForestTypeSpecification}
+                  didSpecifyForestType={didSpecifyForestType}
+                  onDataInit={onDataInit}
+                  didInit={didInit}
+                  postDataToAPI = {postDataToAPI}
+                />
+                <div className="centered">
+                    {buttonPanel}
+                    {statsPanel}
+                </div>
             </div>
-        </div>
-    );
+          ) : (
+            <span>Loading...</span>
+          )}
+      </>
+    )
 };
+
 
 const sectorParametersNames = [
     "Identyfikator sektora",
