@@ -63,7 +63,6 @@ class CsvLogger:
     # Funkcja wywoływana w kazdej iteracji symulacji w main.py w ...  
     def log_current_forest_area_state(self):
         while self.is_logging:
-            print('ZACZYNAM ZAPISYWAĆ')
             sectors_data = self.transfer.sectors_data
             # Dopisanie chwilowego stanu danego sektora do odpowiadającego mu obiektu DataFrame
             for key in sectors_data:
@@ -75,13 +74,10 @@ class CsvLogger:
                 df_tmp = self.forest_sectors_dataframes[key][1]
                 df_tmp = df_tmp.append(new_row, ignore_index=True)
                 self.forest_sectors_dataframes[key] = (key, df_tmp)
-            print('ZAPISAŁEM')
 
     # Funkcja wywoływana podczas zakończenia symulacji - po przyciśnięciu Reset
     def save_logs(self):
-        print('START SAVING')
         for item in self.forest_sectors_dataframes:
             idx = item[0]
             df = item[1]
             df.to_csv(self.output_logs_dir_path + self.current_simulation_dir_name + "/sector_" + str(idx) + ".csv", index=False)
-        print('STOP SAVING')
