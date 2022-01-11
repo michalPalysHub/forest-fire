@@ -106,9 +106,8 @@ const App = () => {
     const handleResetClick = () => {
         setDidInit(false);
         setDidSpecifyForestType(false);
-        setSimulationRun(false);
         setTimeout(1000);
-        clearInterval(timer);
+        handleStopClick()
         postDataToAPI('Data reset', '/reset');
         postDataToAPI({ 'firefighters_limit': 5 }, '/settings');
         getSimulationDataFromApi();

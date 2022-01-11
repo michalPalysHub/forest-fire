@@ -1,9 +1,9 @@
 # Kierunki wiatru, tak o wypisane.
 WIND_DIRECTIONS = (
-    'N',
-    'NE',
     'E',
     'SE',
+    'N',
+    'NE',
     'S',
     'SW',
     'W',

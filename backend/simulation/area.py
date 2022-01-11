@@ -26,6 +26,7 @@ class ForestArea:
         self.sectors = dict()
         self.sensors = dict()
         self.sectors_on_fire = list()
+        self.wind_direction = random.choice(WIND_DIRECTIONS)
 
         self.fire_initted = False
         self.forest_on_fire = False
@@ -43,7 +44,7 @@ class ForestArea:
             j = sector['j']
             forest_type = sector['forestType']
             is_fire_source = sector['isFireSource']
-            self.sectors[sector_id] = ForestSector( sector_id, i, j, forest_type, is_fire_source)
+            self.sectors[sector_id] = ForestSector( sector_id, i, j, forest_type, is_fire_source, self.wind_direction)
             self.sectors[sector_id].neighbor_ids = self.get_direct_neighbor_ids(i, j)
 
     def prepare_sector_buffors(self, data: dict):
@@ -244,7 +245,7 @@ class ForestSector:
     """
     Zawiera informacje na temat poszczególnych, niejmniejszych sektorów lasu.
     """
-    def __init__(self, uid: int, i: int, j: int, forest_type: int, is_fire_source: bool):
+    def __init__(self, uid: int, i: int, j: int, forest_type: int, is_fire_source: bool, wind_direction: str):
         """
         Inicjalizacja sektora lasu. Deklaruje informacje o położeniu, typie lasu, warunkach pogodowych, flagi
         informujące o stanie pożaru oraz inne kontenery na dane.
@@ -264,7 +265,7 @@ class ForestSector:
         # Prędkość wiatru [km/h].
         self.wind_speed = 8 + round(random.uniform(-1, 1), 1)
         # Kierunek wiatru.
-        self.wind_direction = random.choice(WIND_DIRECTIONS)
+        self.wind_direction = wind_direction
         # Wartość stężenia CO2 [ppm].
         self.co2 = CO2_START_VALUES[self.forest_type] + round(random.uniform(-5, 5), 1)
         # Wartość stężenia PM2.5 [ug/m3].
@@ -279,6 +280,8 @@ class ForestSector:
         self.ffdi = float()
         self.k = K_FACTORS[self.forest_type]
         self.state = int()
+
+        self.fuel_divider = 30
 
         self.neighbor_ids = list()
         self.data = dict()
@@ -368,7 +371,7 @@ class ForestSector:
         self.update_risk_info()
 
     def reduce_fuel(self):
-        self.fuel -= self.ffdi * self.state / 20
+        self.fuel -= self.ffdi * self.state / self.fuel_divider
 
     def update_risk_info(self):
         """
