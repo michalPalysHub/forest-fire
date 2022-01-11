@@ -158,7 +158,7 @@ class ForestArea:
         else:
             return None
 
-    def update_firefighters_positions(self, firefighters: dict[int ,Firefighter]):
+    def update_firefighters_positions(self, firefighters: dict[int, Firefighter]):
         self.firefighters_positions = {firefighter.id: firefighter.sector_id for firefighter in firefighters.values()}
 
     def update_sector_due_fire(self, sector: ForestSector):

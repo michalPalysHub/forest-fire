@@ -3,6 +3,7 @@ import pandas as pd
 from datetime import datetime
 
 from ..agents import Transfer
+from .datetime import Datetime
 
 
 class CsvLogger:
@@ -15,6 +16,7 @@ class CsvLogger:
 
     # Nazwy kolumn dla tworzonych DataFrame'ów sektorów
     df_template_columns = [
+        # 'timestamp',
         'air_humidity',
         'co2',
         'ffdi',
@@ -28,7 +30,8 @@ class CsvLogger:
     ]
 
     # Konstruktor wywoływany w main.py w set_init_data() w momencie tworzenia obiektu typu CsvLogger
-    def __init__(self, transfer: Transfer):
+    def __init__(self, transfer: Transfer, datetime: Datetime):
+        self.datetime = datetime
         self.transfer = transfer
         self.is_logging = False
 
@@ -39,7 +42,10 @@ class CsvLogger:
         for key in sectors_data:
             df_data = {}
             for column in self.df_template_columns:
-                df_data[column] = '{}'.format(sectors_data[key][column])
+                if column != 'timestamp':
+                    df_data[column] = '{}'.format(sectors_data[key][column])
+                # else:
+                #     df_data[column] = '{}'.format(datetime)
             df_for_sector = pd.DataFrame(df_data, index=[0])
             self.forest_sectors_dataframes.append((key, df_for_sector))
 
@@ -68,12 +74,17 @@ class CsvLogger:
             for key in sectors_data:
                 df_data = {}
                 for column in self.df_template_columns:
-                    df_data[column] = sectors_data[key][column]
+                    if column != 'timestamp':
+                        df_data[column] = sectors_data[key][column]
+                    # else:
+                    #     df_data[column] = self.datetime
                 new_row = pd.Series(df_data)
 
                 df_tmp = self.forest_sectors_dataframes[key][1]
                 df_tmp = df_tmp.append(new_row, ignore_index=True)
                 self.forest_sectors_dataframes[key] = (key, df_tmp)
+
+        self.save_logs()
 
     # Funkcja wywoływana podczas zakończenia symulacji - po przyciśnięciu Reset
     def save_logs(self):

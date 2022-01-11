@@ -44,7 +44,7 @@ class Simulation:
         self.sectors_data = dict()
 
         # Instancja klasy słuzącej do logowania stanu wszystkich sektorów w trakcie pojedynczej symulacji
-        self.csv_logger = CsvLogger(self.transfer)
+        self.csv_logger = CsvLogger(self.transfer, self.datetime)
 
         # Limit dostępnych wozów strażackich.
         self.firefighters_limit = 5
@@ -104,7 +104,6 @@ class Simulation:
         """
         Zatrzymanie symulacji oraz przywrócene ustawień początkowych.
         """
-        self.csv_logger.save_logs()
         self.csv_logger.is_logging = False
         self.simulation_run = False
         self.__init__()
