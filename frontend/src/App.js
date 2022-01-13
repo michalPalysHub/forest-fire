@@ -22,6 +22,9 @@ const App = () => {
     // Flaga informująca o tym, czy dane inicjalizacyjne zostały poprawnie odebrane przez API
     const [didInit, setDidInit] = useState(false);
 
+    // Flaga informująca o tym, czy aplikacja została odświeżona
+    const [didInitApp, setDidInitApp] = useState(false);
+
     // Flaga informująca o tym, czy symulacja jest w trakcie działania
     const [simulationRun, setSimulationRun] = useState(false);
 
@@ -118,6 +121,11 @@ const App = () => {
         const newVal = e.target.value;
         setTimeout(newVal);
         postDataToAPI({ 'newLoopTime': newVal }, '/settings')
+    }
+
+    if (!didInitApp) {
+        handleResetClick();
+        setDidInitApp(true);
     }
 
     // Warunkowe wyświetlanie/ukrywanie odpowiednich przycisków
