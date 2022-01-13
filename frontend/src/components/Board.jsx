@@ -20,9 +20,9 @@ const Board = (props) => {
     // Pobranie danych inicjacyjnych z API - endpoint '/dimensions'.
     const boardDimensions = GetDataFromAPI('/dimensions')
     if (boardDimensions === null) return null;
-    const noRows = 20
-    const noColumns = 40
-    const sectorSize = 30
+    const noRows = boardDimensions["rows"]
+    const noColumns = boardDimensions["columns"]
+    const sectorSize = boardDimensions["sectorSize"]
 
     // Utworzenie listy współrzędnych dla kolejnych sektorów
     const matrixElementsCoords = [];
