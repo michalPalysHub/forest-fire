@@ -146,6 +146,7 @@ const Board = (props) => {
                         display: 'block',
                         height: `${noRows * sectorSize}px`,
                         width: `${noColumns * sectorSize}px`,
+                        minWidth: `${noColumns * sectorSize}px`,
                         backgroundColor: 'white',
                         backgroundImage: 'url(/img/map1.png)',
                         boxShadow: '10px 10px 10px lightgray',
