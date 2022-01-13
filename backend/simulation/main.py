@@ -21,7 +21,7 @@ class Simulation:
         ...
         """
         # Rozmiary planszy.
-        self.columns = 30
+        self.columns = 40
         self.rows = 20
         self.sector_size = 30
 

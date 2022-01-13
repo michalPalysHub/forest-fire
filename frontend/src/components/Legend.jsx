@@ -135,7 +135,7 @@ const Legend = ({ width }) => {
                                 <LegendButton backgroundColor={"#de0000"} borderColors={"#3fd54c"}></LegendButton>
                             </td>
                             <td>
-                                - easy to control
+                                - fairly easy to control
                             </td>
                         </tr>
                         <tr>
@@ -151,7 +151,7 @@ const Legend = ({ width }) => {
                                 <LegendButton backgroundColor={"#4c0000"} borderColors={"#3fd54c"}></LegendButton>
                             </td>
                             <td>
-                                - impossible to control
+                                - almost impossible to control
                             </td>
                         </tr>
                         <tr>
@@ -159,7 +159,7 @@ const Legend = ({ width }) => {
                                 <LegendButton backgroundColor={"#000000"} borderColors={"#3fd54c"}></LegendButton>
                             </td>
                             <td>
-                                - burned
+                                - impossible to control/burned
                             </td>
                         </tr>
                     </tbody>

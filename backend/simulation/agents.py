@@ -80,7 +80,7 @@ class Patrol:
 class Firefighter:
 
     fire_departament_i = 10
-    fire_departament_j = 15
+    fire_departament_j = 20
     limit = 5
     day_move_speed = 1
     night_move_speed = 0.75

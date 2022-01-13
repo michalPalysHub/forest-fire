@@ -40,7 +40,7 @@ const Sector = (props) => {
     const sectorState = props.sectorState;
 
     // Współrzędne remizy strażackiej.
-    const fireStationCoords = {'i': 10, 'j': 15}
+    const fireStationCoords = {'i': 10, 'j': 20}
 
     // Oznaczenie flagą sektora, na którym znajduje się remiza straży pożarnej.
     if (i === fireStationCoords['i'] && j === fireStationCoords['j']) {
