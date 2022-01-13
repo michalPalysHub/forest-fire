@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Board from './components/Board'
 import styled from 'styled-components';
 
@@ -59,10 +59,10 @@ const App = () => {
     // Pobranie informacji o czasie
     const fetchDateTime = () => {
         fetch('/datetime')
-          .then(response => response.json())
-          .then(message => {
-              setDateTime(message['dateTime'])
-          })
+            .then(response => response.json())
+            .then(message => {
+                setDateTime(message['dateTime'])
+            })
     }
 
     const fetchCyclical = () => {
@@ -189,30 +189,30 @@ const App = () => {
     }
 
     return (
-      <>
-          {sectorsData && dateTime ? (
-            <div className="main">
-                <StyledLabel> Forest fire </StyledLabel>
-                <StyledLabel>{`${dateTime}`}</StyledLabel>
-                <Board
-                  simulationData={sectorsData}
-                  firefightersPositions={firefightersPositions}
-                  setSelectedSectorIndex={setSelectedSectorIndex}
-                  onForestTypeSpecification={onForestTypeSpecification}
-                  didSpecifyForestType={didSpecifyForestType}
-                  onDataInit={onDataInit}
-                  didInit={didInit}
-                  postDataToAPI = {postDataToAPI}
-                />
-                <div className="centered">
-                    {buttonPanel}
-                    {statsPanel}
+        <>
+            {sectorsData && dateTime ? (
+                <div className="main">
+                    <StyledLabel> Forest fire </StyledLabel>
+                    <StyledLabel>{`${dateTime}`}</StyledLabel>
+                        <Board
+                            simulationData={sectorsData}
+                            firefightersPositions={firefightersPositions}
+                            setSelectedSectorIndex={setSelectedSectorIndex}
+                            onForestTypeSpecification={onForestTypeSpecification}
+                            didSpecifyForestType={didSpecifyForestType}
+                            onDataInit={onDataInit}
+                            didInit={didInit}
+                            postDataToAPI={postDataToAPI}
+                        />
+                    <div className="centered">
+                        {buttonPanel}
+                        {statsPanel}
+                    </div>
                 </div>
-            </div>
-          ) : (
-            <span>Loading...</span>
-          )}
-      </>
+            ) : (
+                <span>Loading...</span>
+            )}
+        </>
     )
 };
 
