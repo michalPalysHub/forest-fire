@@ -20,9 +20,9 @@ const Board = (props) => {
     // Pobranie danych inicjacyjnych z API - endpoint '/dimensions'.
     const boardDimensions = GetDataFromAPI('/dimensions')
     if (boardDimensions === null) return null;
-    const noRows = boardDimensions["rows"]
-    const noColumns = boardDimensions["columns"]
-    const sectorSize = boardDimensions["sectorSize"]
+    const noRows = boardDimensions.rows
+    const noColumns = boardDimensions.columns
+    const sectorSize = boardDimensions.sectorSize
 
     // Utworzenie listy współrzędnych dla kolejnych sektorów
     const matrixElementsCoords = [];
@@ -146,7 +146,6 @@ const Board = (props) => {
                         display: 'block',
                         height: `${noRows * sectorSize}px`,
                         width: `${noColumns * sectorSize}px`,
-                        minWidth: `${noColumns * sectorSize}px`,
                         backgroundColor: 'white',
                         backgroundImage: 'url(/img/map1.png)',
                         boxShadow: '10px 10px 10px lightgray',

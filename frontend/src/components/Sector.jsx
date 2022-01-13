@@ -39,17 +39,8 @@ const Sector = (props) => {
     const [firefightersAmount, setFirefightersAmount] = useState(props.firefightersAmount);
     const sectorState = props.sectorState;
 
-    const fetchFirefghtersAmount = () => {
-        fetch('/sectors')
-          .then(response => response.json())
-          .then(message => {
-              const positions = Object.values(message['firefighters_positions'])
-              setFirefightersAmount(positions.filter(id=>id===props.id).length)
-          })
-    }
-
     // Współrzędne remizy strażackiej.
-    const fireStationCoords = {'i': 10, 'j': 28}
+    const fireStationCoords = {'i': 10, 'j': 15}
 
     // Oznaczenie flagą sektora, na którym znajduje się remiza straży pożarnej.
     if (i === fireStationCoords['i'] && j === fireStationCoords['j']) {

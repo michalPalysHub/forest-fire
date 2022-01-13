@@ -79,6 +79,8 @@ class Patrol:
 
 class Firefighter:
 
+    fire_departament_i = 10
+    fire_departament_j = 15
     limit = 5
     day_move_speed = 1
     night_move_speed = 0.75
@@ -95,9 +97,9 @@ class Firefighter:
         self.forest_area = forest_area
         self.datetime = datetime
         self.id = uid
-        self.sector_id = 428
-        self.i = 10
-        self.j = 28
+        self.i = self.fire_departament_i
+        self.j = self.fire_departament_j
+        self.sector_id = self.i * self.forest_area.columns + self.j
         self.order_sector_id = order_sector_id if order_sector_id is not None else self.sector_id
         self.order_i = order_i if order_i is not None else self.i
         self.order_j = order_j if order_j is not None else self.j
