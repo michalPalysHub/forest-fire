@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import '../App.css';
+import Legend from './Legend.jsx';
 
 
 const Board = (props) => {
@@ -139,8 +140,14 @@ const Board = (props) => {
     }
 
     return (
-        <div>
-            <div style={{ display: 'flex', justifyContent: 'center', }}>
+        <div id='board'>
+            <div style={{
+                display: 'flex',
+                flexDirection: "column",
+                alignItems: "center"
+            }}>
+                <Legend width={noColumns * sectorSize}></Legend>
+
                 <div style={
                     {
                         display: 'block',
@@ -153,19 +160,19 @@ const Board = (props) => {
                 }>
                     {matrixElementsCoords.map((coords, i) => (
                         <Sector size={sectorSize}
-                                id={i}
-                                i={coords[0]}
-                                j={coords[1]}
-                                forestTypeGlobal={forestTypeGlobal}
-                                sectorState={getSectorState(i)}
-                                onSectorUpdate={onSectorUpdate}
-                                updateForestTypeGlobal={updateForestTypeGlobal}
-                                didInit={props.didInit}
-                                didSpecifyForestType={props.didSpecifyForestType}
-                                setSelectedSectorIndex={props.setSelectedSectorIndex}
-                                postDataToAPI={props.postDataToAPI}
-                                firefightersAmount={props.firefightersPositions.filter(id=>id===i).length}
-                                key={i}
+                            id={i}
+                            i={coords[0]}
+                            j={coords[1]}
+                            forestTypeGlobal={forestTypeGlobal}
+                            sectorState={getSectorState(i)}
+                            onSectorUpdate={onSectorUpdate}
+                            updateForestTypeGlobal={updateForestTypeGlobal}
+                            didInit={props.didInit}
+                            didSpecifyForestType={props.didSpecifyForestType}
+                            setSelectedSectorIndex={props.setSelectedSectorIndex}
+                            postDataToAPI={props.postDataToAPI}
+                            firefightersAmount={props.firefightersPositions.filter(id => id === i).length}
+                            key={i}
                         />
                     ))}
                 </div>

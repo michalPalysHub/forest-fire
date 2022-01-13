@@ -1,0 +1,14 @@
+.sector {
+    width: 60px;
+}
+
+.legend_column {
+    width: 33.3%;
+    height: "100%";
+    display: "flex";
+    flex-direction: "column";
+}
+
+p {
+    align-self: "center";
+}
